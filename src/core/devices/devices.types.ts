@@ -1,5 +1,5 @@
 export type Devices = {
-  tempHumSensor: {
+  tempHumSensors: {
     [key: string]: TempHumSensor
   }
 }

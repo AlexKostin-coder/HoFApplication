@@ -16,7 +16,7 @@ export const tempHumSensor = {
 };
 
 export const defaultDevices: Devices = {
-  tempHumSensor: {
+  tempHumSensors: {
     [tempHumSensor.id_Sensor]: tempHumSensor
   }
 };
