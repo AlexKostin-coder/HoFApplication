@@ -1,14 +1,20 @@
+import React, { FC } from 'react';
 import {
   Text,
+  TouchableOpacity,
   View
 } from 'react-native';
 
-import React from 'react';
+import { logOut } from '../../core/auth/auth.actions';
+import { useDispatch } from 'react-redux';
 
-const HomeScreen = () => {
+const HomeScreen: FC = () => {
+  const dispatch = useDispatch();
   return (
     <View>
-      <Text>Home</Text>
+      <TouchableOpacity onPress={async () => { await dispatch(logOut()) }}>
+        <Text>Вийти</Text>
+      </TouchableOpacity>
     </View>
   )
 }
