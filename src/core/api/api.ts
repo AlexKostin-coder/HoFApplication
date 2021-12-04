@@ -1,8 +1,10 @@
 import {
 	Headers,
 	Methods,
+	ResponseData,
 } from "./api.types";
 
+import { authTokenSelector } from "../auth/auth.selectors";
 import axios from "axios";
 
 const DOMAIN = 'http://hofenterprise.com/';
@@ -14,7 +16,7 @@ export const sendRequest = async (
 	payload: object
 ) => {
 
-	let result = {
+	let result: ResponseData = {
 		status: 400,
 		data: {},
 		errorText: '',
@@ -37,19 +39,23 @@ export const sendRequest = async (
 		};
 
 	} catch (e) {
-		if (e.response) {
-			result = {
-				status: e.response.status,
-				data: {},
-				errorText: e.response.data.error
-			};
+		if (axios.isAxiosError(e)) {
+			if (e.response) {
+				result = {
+					status: e.response.status,
+					data: {},
+					errorText: e.response.data.error
+				};
+			}
+		} else {
+			console.log({ e });
 		}
 	}
 
 	return result;
 }
 
-export const createApi = (dispatch, getState) => async (
+export const createApi = (dispatch: Dispatch, getState: GetStateType) => async (
 	method: Methods,
 	url: string,
 	payload: object,
@@ -57,7 +63,7 @@ export const createApi = (dispatch, getState) => async (
 
 	try {
 		const state = getState();
-		const { authToken } = state.auth;
+		const authToken = authTokenSelector(state);
 
 		const headers: Headers = {
 			'Accept': 'application/json',
@@ -68,7 +74,7 @@ export const createApi = (dispatch, getState) => async (
 			headers.Authorization = `Bearer ${authToken}`;
 		};
 
-		const response = await sendRequest(
+		const response: ResponseData = await sendRequest(
 			url,
 			method,
 			headers,
@@ -81,6 +87,10 @@ export const createApi = (dispatch, getState) => async (
 
 		if (response.status === 401) {
 			throw new Error(response.errorText || 'Cлід авторизуватись!');
+		}
+
+		if (response.status != 200) {
+			throw new Error(response.errorText);
 		}
 
 		return response;

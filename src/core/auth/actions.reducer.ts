@@ -3,7 +3,9 @@ import {
 	defaultAuth
 } from "./auth.const";
 
-export const auth = (state = defaultAuth, action: any) => {
+import { AuthAction } from "./actions.types";
+
+export const auth = (state: MainState['auth'] = defaultAuth, action: AuthAction) => {
 	switch (action.type) {
 		case GET_AUTH:
 			return {

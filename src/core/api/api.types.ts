@@ -8,8 +8,13 @@ export type Headers = {
 export type Methods = 'POST' | 'GET' | 'DELETE' | 'PUT';
 
 export type ResponseData = {
-	status: boolean,
-    statusCode: number,
-    data: object,
-    errorText: string,
+	status: number,
+	data: any,
+	errorText?: string,
 };
+
+export type Api = (
+	method: Methods,
+	url: string,
+	payload: object,
+) => Promise<ResponseData | never>
