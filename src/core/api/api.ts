@@ -48,7 +48,7 @@ export const sendRequest = async (
 				};
 			}
 		} else {
-			console.log({ e });
+			throw e;
 		}
 	}
 
@@ -89,8 +89,8 @@ export const createApi = (dispatch: Dispatch, getState: GetStateType) => async (
 			throw new Error(response.errorText || 'Cлід авторизуватись!');
 		}
 
-		if (response.status != 200) {
-			throw new Error(response.errorText);
+		if (response.status !== 200) {
+			throw new Error(response.errorText || 'Трапилась помилка при запиті до сервера!');
 		}
 
 		return response;

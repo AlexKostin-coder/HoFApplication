@@ -1,4 +1,5 @@
 import { GET_AUTH } from "./auth.const";
+import { setMessages } from '../ui/ui.actions';
 
 export const getAuth = (
 	email: string,
@@ -11,10 +12,6 @@ export const getAuth = (
 		try {
 			const res = await api('POST', 'users/login/app', { email, password });
 
-			if (!res.status) {
-				throw new Error(res.errorText || "Трапилася помилка при запиті до сервера!");
-			}
-
 			const authToken: string = res.data.token;
 
 			return dispatch({
@@ -22,7 +19,12 @@ export const getAuth = (
 				payload: { authToken },
 			});
 
-		} catch (e) {
-			console.log({ e });
+		} catch (e: any) {
+			dispatch(
+				setMessages({
+					type: 'warning',
+					text: e.message,
+				}),
+			);
 		}
 	}
