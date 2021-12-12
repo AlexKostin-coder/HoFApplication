@@ -1,5 +1,7 @@
 import React, { FC } from 'react';
 
+import Loading from './src/components/widgets/Loading';
+import { NativeBaseProvider } from 'native-base';
 import Navigation from './src/components/Navigation/Navigation';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
@@ -11,8 +13,10 @@ const App: FC = () => {
 
   return (
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <Navigation />
+      <PersistGate loading={<Loading />} persistor={persistor}>
+        <NativeBaseProvider >
+          <Navigation />
+        </NativeBaseProvider>
       </PersistGate>
     </Provider>
   );
