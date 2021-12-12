@@ -12,13 +12,14 @@ const App: FC = () => {
   const { store, persistor } = configureStore();
 
   return (
-    <Provider store={store}>
-      <PersistGate loading={<Loading />} persistor={persistor}>
-        <NativeBaseProvider >
+    <NativeBaseProvider >
+      <Provider store={store}>
+        <PersistGate loading={<Loading />} persistor={persistor}>
+
           <Navigation />
-        </NativeBaseProvider>
-      </PersistGate>
-    </Provider>
+        </PersistGate>
+      </Provider>
+    </NativeBaseProvider>
   );
 };
 

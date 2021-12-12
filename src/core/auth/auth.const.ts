@@ -5,4 +5,5 @@ export const LOG_OUT = 'LOG_OUT';
 
 export const defaultAuth: Auth = {
     authToken: '',
+    user_id: '',
 };

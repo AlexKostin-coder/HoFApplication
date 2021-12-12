@@ -13,7 +13,7 @@ export const getUser = () => async (
 
     return dispatch({
       type: GET_USER,
-      payload: { [res.data.user_id]: res.data },
+      payload: res.data,
     });
 
   } catch (e: any) {

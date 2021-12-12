@@ -13,7 +13,7 @@ export const sendRequest = async (
 	url: string,
 	method: Methods,
 	headers: Headers,
-	payload: object
+	payload?: object
 ) => {
 
 	let result: ResponseData = {
@@ -58,7 +58,7 @@ export const sendRequest = async (
 export const createApi = (dispatch: Dispatch, getState: GetStateType) => async (
 	method: Methods,
 	url: string,
-	payload: object,
+	payload?: object,
 ) => {
 
 	try {

@@ -1,0 +1,1 @@
+export const roomsSelector = (state: MainState) => state.rooms;

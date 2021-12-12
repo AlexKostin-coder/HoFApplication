@@ -1,3 +1,4 @@
+import { Rooms } from './../core/rooms/rooms.types';
 import { Devices } from './../core/devices/devices.types';
 import { UIState } from './../core/ui/ui.types';
 import { Api } from './../core/api/api.types';
@@ -12,6 +13,7 @@ declare global {
 		ui: UIState;
 		users: Users,
 		devices: Devices,
+		rooms: Rooms
 	};
 
 	type MainStorge = Store<MainState, AnyAction>;

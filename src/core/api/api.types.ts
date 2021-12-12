@@ -16,5 +16,5 @@ export type ResponseData = {
 export type Api = (
 	method: Methods,
 	url: string,
-	payload: object,
+	payload?: object,
 ) => Promise<ResponseData | never>
