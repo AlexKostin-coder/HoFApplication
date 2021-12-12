@@ -10,6 +10,7 @@ import React, { FC, useEffect, useState } from 'react';
 import { validEmail, validPassword } from '../../core/tools/validationData';
 
 import { getAuth } from '../../core/auth/auth.actions';
+import { getUser } from '../../core/users/users.actions';
 import { styles } from './LoginScreen.style';
 import { useDispatch } from 'react-redux';
 
@@ -29,7 +30,10 @@ const LoginScreen: FC = () => {
     }
     if (email.length && password.length) {
       setIsLoading(true);
-      await dispatch(getAuth(email, password));
+      const res = await dispatch(getAuth(email, password));
+      if (res) {
+        await dispatch(getUser());
+      }
       setIsLoading(false);
     }
   }

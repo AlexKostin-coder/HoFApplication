@@ -15,10 +15,12 @@ export const getAuth = (email: string, password: string) => async (
 
 		const authToken: string = res.data.token;
 
-		return dispatch({
+		dispatch({
 			type: GET_AUTH,
 			payload: { authToken },
 		});
+
+		return true;
 
 	} catch (e: any) {
 		dispatch(

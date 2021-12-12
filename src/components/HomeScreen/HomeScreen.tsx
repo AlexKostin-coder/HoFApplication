@@ -1,27 +1,23 @@
 import {
-  Avatar,
-  Image,
-} from 'native-base';
-import {
   FlatList,
+  Image,
   ImageBackground,
   RefreshControl,
-  ScrollView,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 import React, { FC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import {
+  Avatar,
+} from 'native-base';
 import { authUserSelector } from '../../core/users/users.selectors';
 import { getRooms } from '../../core/rooms/rooms.actions';
-import { getTemperatureSensors } from '../../core/devices/devices.actions';
-import { getUser } from '../../core/users/users.actions';
 import { logOut } from '../../core/auth/auth.actions';
 import { roomsSelector } from '../../core/rooms/rooms.selectors';
 import { styles } from './HomeScreen.style';
-import { tempHumSensorsSelector } from '../../core/devices/devices.selectors';
 
 const catagoriesDevice = [
   { id: '', name: '', image_id: '' },
@@ -35,11 +31,7 @@ const HomeScreen: FC = () => {
 
   const getData = async () => {
     setIsLoading(true);
-    await Promise.all([
-      dispatch(getUser()),
-      dispatch(getRooms()),
-      dispatch(getTemperatureSensors()),
-    ]);
+    await dispatch(getRooms());
     setIsLoading(false);
   }
 
@@ -47,10 +39,8 @@ const HomeScreen: FC = () => {
     getData();
   }, []);
 
-  const tempHumSensors = useSelector(tempHumSensorsSelector);
   const authUser = useSelector(authUserSelector);
   const rooms = useSelector(roomsSelector);
-
 
   const {
     name,
@@ -82,11 +72,11 @@ const HomeScreen: FC = () => {
           <Text style={styles.name}>Привіт, {name}</Text>
           <Text style={styles.welcome_title}>Офіс</Text>
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={async () => await dispatch(logOut())}>
           <Avatar
-            bg="lightBlue.400"
+            bg="red.400"
             source={{
-              uri: `http://hofenterprise.com/image/${photo ? photo : ''}`,
+              uri: `http://hofenterprise.com/image/${photo}`,
             }}
           >
             {name ? name[0].toUpperCase() : ''}
@@ -192,7 +182,6 @@ const HomeScreen: FC = () => {
                           source={
                             require('../../assets/images/tempsensor.jpg')
                           }
-                          alt='image_id'
                         />
                         <Text>{name}</Text>
                       </View>
