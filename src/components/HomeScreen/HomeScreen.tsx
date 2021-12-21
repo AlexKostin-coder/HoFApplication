@@ -7,12 +7,22 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import React, { FC, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-
 import {
-  Avatar,
-} from 'native-base';
+  NavigationProp,
+  ParamListBase
+} from '@react-navigation/native';
+import React, {
+  FC,
+  useEffect,
+  useState
+} from 'react';
+import {
+  useDispatch,
+  useSelector
+} from 'react-redux';
+
+import Avatar from '../widgets/Avatar/Avatar';
+import { DEVICES_SCREEN } from '../../core/navigation/navigation.const';
 import { authUserSelector } from '../../core/users/users.selectors';
 import { getRooms } from '../../core/rooms/rooms.actions';
 import { logOut } from '../../core/auth/auth.actions';
@@ -20,11 +30,29 @@ import { roomsSelector } from '../../core/rooms/rooms.selectors';
 import { styles } from './HomeScreen.style';
 
 const catagoriesDevice = [
-  { id: '', name: '', image_id: '' },
-  { id: '1', name: 'Температура/Вологість', image_id: 'tempsensor.jpg' },
+  {
+    id: '1',
+    name: 'Температура/Вологість',
+    image_id: 'tempsensor.jpg',
+    type: 'temp/hum'
+  },
+  // {
+  //   id: '12',
+  //   name: 'Температура/Вологість',
+  //   image_id: 'tempsensor.jpg',
+  //   type: 'temp/hum'
+  // },
 ];
 
-const HomeScreen: FC = () => {
+interface HomeScreenProps {
+  navigation: NavigationProp<ParamListBase>
+}
+
+const HomeScreen: FC<HomeScreenProps> = props => {
+
+  const {
+    navigation
+  } = props;
 
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -74,14 +102,10 @@ const HomeScreen: FC = () => {
         </View>
         <TouchableOpacity onPress={async () => await dispatch(logOut())}>
           <Avatar
-            bg="red.400"
-            source={{
-              uri: `http://hofenterprise.com/image/${photo}`,
-            }}
-          >
-            {name ? name[0].toUpperCase() : ''}
-            <Avatar.Badge bg="green.500" />
-          </Avatar>
+            photoId={photo}
+            alt={name[0]?.toUpperCase() || ""}
+            showBadge={true}
+          />
         </TouchableOpacity>
       </View>
       <View style={styles.rooms}>
@@ -121,7 +145,6 @@ const HomeScreen: FC = () => {
                     : (
                       <ImageBackground
                         source={
-                          // { uri: "https://reactjs.org/logo-og.png" }
                           require('../../assets/images/test-room.jpg')
                         }
                         resizeMode="cover"
@@ -150,43 +173,34 @@ const HomeScreen: FC = () => {
           data={catagoriesDevice.concat().reverse()} // TODO тимчасово
           style={styles.catagories_device_list}
           keyExtractor={(item, index) => `${item.id}-${index}`}
-          numColumns={catagoriesDevice.length > 2 ? 2 : catagoriesDevice.length <= 2 ? 1 : 0}
+          numColumns={2}
           renderItem={({ item: catagoryDevice, index }) => {
             const {
-              id,
+              id: categoryId,
               name,
               image_id,
             } = catagoryDevice;
 
-            const addCategoryDevice = id === ""
-              ? true
-              : false;
-
             return (
               <TouchableOpacity
-                style={[styles.catagories_device, addCategoryDevice ? styles.room_add : {}]}
+                style={styles.catagories_device}
                 activeOpacity={0.6}
+                onPress={() => {
+                  navigation.navigate(DEVICES_SCREEN, {
+                    categoryId,
+                    title: name
+                  })
+                }}
               >
-                {
-                  addCategoryDevice ? (
-                    <View style={styles.room_add_wrapper}>
-                      <View style={styles.room_add_content}>
-                        <Text style={styles.room_add_title}>+</Text>
-                      </View>
-                    </View>
-                  )
-                    : (
-                      <View style={styles.catagories_device_content}>
-                        <Image
-                          style={styles.catagories_device_image}
-                          source={
-                            require('../../assets/images/tempsensor.jpg')
-                          }
-                        />
-                        <Text>{name}</Text>
-                      </View>
-                    )
-                }
+                <View style={styles.catagories_device_content}>
+                  <Image
+                    style={styles.catagories_device_image}
+                    source={
+                      require('../../assets/images/tempsensor.jpg')
+                    }
+                  />
+                  <Text style={styles.catagories_device_text}>{name}</Text>
+                </View>
               </TouchableOpacity>
             )
           }}

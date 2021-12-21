@@ -16,12 +16,12 @@ export const styles = StyleSheet.create({
   },
   welcome_title: {
     fontSize: 14,
-    color: 'grey'
+    color: '#333333'
   },
   name: {
     fontSize: 24,
     fontWeight: "bold",
-    color: 'black'
+    color: '#333333'
   },
   rooms: {
     marginTop: 20,
@@ -35,6 +35,7 @@ export const styles = StyleSheet.create({
   rooms_list: {
     marginTop: 10,
     paddingLeft: 10,
+    marginRight: 10,
   },
   room: {
     width: 200,
@@ -112,5 +113,8 @@ export const styles = StyleSheet.create({
     width: 100,
     height: 100,
     resizeMode: 'cover'
+  },
+  catagories_device_text: {
+    color: 'grey'
   }
 });

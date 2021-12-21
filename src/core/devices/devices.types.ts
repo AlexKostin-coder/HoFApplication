@@ -1,10 +1,10 @@
 export type Devices = {
   tempHumSensors: {
-    [key: string]: TempHumSensor
+    [key: string]: TempHumSensorTypes
   }
 }
 
-export type TempHumSensor = {
+export type TempHumSensorTypes = {
   Sensor: string
   StatusTemp: string
   StatusHum: string

@@ -15,7 +15,8 @@ export const styles = StyleSheet.create({
   },
   label: {
     marginLeft: 10,
-    fontSize: 16
+    fontSize: 16,
+    color: 'black'
   },
   wrapperLoginForm: {
     flex: 1,
@@ -69,4 +70,7 @@ export const styles = StyleSheet.create({
   agreeCase: {
     marginTop: 10,
   },
+  other_info: {
+    color: 'black'
+  }
 });

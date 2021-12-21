@@ -9,6 +9,7 @@ import {
 import React, { FC, useEffect, useState } from 'react';
 import { validEmail, validPassword } from '../../core/tools/validationData';
 
+import { GET_AUTH } from '../../core/auth/auth.const';
 import { getAuth } from '../../core/auth/auth.actions';
 import { getUser } from '../../core/users/users.actions';
 import { styles } from './LoginScreen.style';
@@ -29,12 +30,15 @@ const LoginScreen: FC = () => {
       setShowError(true);
     }
     if (email.length && password.length) {
-      setIsLoading(true);
-      const res = await dispatch(getAuth(email, password));
-      if (res) {
+      try {
+        setIsLoading(true);
+        await dispatch(getAuth(email, password));
         await dispatch(getUser());
+        setIsLoading(false);
+      } catch (e) {
+        setIsLoading(false);
+        console.log({ e });
       }
-      setIsLoading(false);
     }
   }
 
@@ -71,6 +75,7 @@ const LoginScreen: FC = () => {
               style={styles.input}
               keyboardType="email-address"
               placeholder="E-mail"
+              placeholderTextColor={'black'}
               value={email}
               onChangeText={(val) => { setEmail(val) }}
               returnKeyType="next"
@@ -84,6 +89,7 @@ const LoginScreen: FC = () => {
             <TextInput
               style={styles.input}
               placeholder="Пароль"
+              placeholderTextColor={'black'}
               value={password}
               onChangeText={(val) => { setPassword(val) }}
               returnKeyType="next"
@@ -92,7 +98,7 @@ const LoginScreen: FC = () => {
           <Text style={styles.errorMsg}>{showError && validPass.errorText ? validPass.errorText : ''}</Text>
         </View>
         <TouchableOpacity style={styles.recoveryBtn}>
-          <Text>Забули пароль?</Text>
+          <Text style={styles.other_info}>Забули пароль?</Text>
         </TouchableOpacity>
         <View style={styles.wrapperBtn}>
           <TouchableOpacity
@@ -110,7 +116,7 @@ const LoginScreen: FC = () => {
         </View>
         <View style={styles.agreeCase}>
           <TouchableOpacity onPress={() => { }}>
-            <Text>Під час входу ви погоджуєтеся з нашими
+            <Text style={styles.other_info}>Під час входу ви погоджуєтеся з нашими
               <Text style={{ fontWeight: "bold", color: "#2F4F4F" }}> Умовами користування</Text>
             </Text>
           </TouchableOpacity>
