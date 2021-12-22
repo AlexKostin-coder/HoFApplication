@@ -8,18 +8,17 @@ const { width, height } = Dimensions.get('window');
 export const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    height: 70,
+    height: 120,
     width: Math.floor(width / 2) - 18,
-    paddingRight: 8,
-    marginHorizontal: 4,
-    marginVertical: 4,
+    padding: 10,
     borderRadius: 16,
-    elevation: 5,
+    elevation: 2,
+    margin: 5,
     flexDirection: 'row',
-    alignItems: 'center'
   },
-  detail_sensor: {
-    width: (Math.floor(width / 2) - 20) / 1.5,
+  details: {
+    flex: 3,
+    justifyContent: 'space-between'
   },
   info_sensor: {
     flexDirection: 'row',
@@ -29,6 +28,16 @@ export const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   text: {
-    color: "#333333"
+    color: "#333333",
+    fontWeight: '700',
+  },
+  image_wrapper: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end'
+  },
+  image: { 
+    width: 60, 
+    height: 60, 
   }
 });

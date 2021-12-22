@@ -50,11 +50,9 @@ const DevicesScreen: FC<DevicesScreenProps> = props => {
     : [];
 
   const getDevices = async () => {
-    if (!devices.length) {
-      setIsLoading(true);
-      await dispatch(getTemperatureSensors());
-      setIsLoading(false);
-    }
+    setIsLoading(true);
+    await dispatch(getTemperatureSensors());
+    setIsLoading(false);
   }
 
   useEffect(() => {

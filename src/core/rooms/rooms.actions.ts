@@ -1,3 +1,4 @@
+import { GET_DEVICES } from './../devices/devices.const';
 import { GET_ROOMS } from "./rooms.const";
 import { normalizeDate } from "../tools/normalizeData";
 import { setMessages } from "../ui/ui.actions";
@@ -26,3 +27,28 @@ export const getRooms = () => async (
     )
   }
 };
+
+export const getDevicesRoom = (id_room: String) => async (
+  dispatch: Dispatch,
+  getState: GetStateType,
+  api: API
+) => {
+  try {
+    const res = await api('POST', 'sensors/user/rooms/sensor', { id_room });
+
+    const devices = normalizeDate(res.data, 'tempHumSensors', 'id_Sensor');
+
+    return dispatch({
+      type: GET_DEVICES,
+      payload: devices
+    });
+
+  } catch (e: any) {
+    dispatch(
+      setMessages({
+        type: 'warning',
+        text: e.message,
+      })
+    )
+  }
+}

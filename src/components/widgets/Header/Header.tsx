@@ -6,18 +6,21 @@ import {
 } from 'react-native';
 
 import ArrowLeft from '../../../assets/icons/arrow-left.svg';
+import Settings from '../../../assets/icons/settings.svg';
 import { styles } from './Header.style';
 
 interface Header {
   title: String,
-  onBack: () => void
+  onBack: () => void,
+  onHandle?: () => void
 }
 
 const Header: FC<Header> = props => {
 
   const {
     title,
-    onBack
+    onBack,
+    onHandle
   } = props;
 
   return (
@@ -29,12 +32,29 @@ const Header: FC<Header> = props => {
         >
           <ArrowLeft
             width={18}
-            height={18} fill="#333333"
+            height={18}
+            fill="#333333"
           />
         </TouchableOpacity>
       </View>
       <View style={styles.title_wrapper}>
         <Text style={styles.title}>{title}</Text>
+      </View>
+      <View style={styles.other_btn}>
+        {
+          Boolean(onHandle) ?
+            <TouchableOpacity
+              style={styles.back_btn}
+              onPress={() => onHandle()}
+            >
+              <Settings
+                width={18}
+                height={18}
+                fill="#333333"
+              />
+            </TouchableOpacity>
+            : null
+        }
       </View>
     </View>
   )

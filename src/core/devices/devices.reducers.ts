@@ -1,6 +1,7 @@
 import {
+  GET_DEVICES,
   GET_TEMPERATURE_SENESORS,
-  defaultDevices,
+  defaultDevices
 } from "./devices.const";
 
 import { LOG_OUT } from "../auth/auth.const";
@@ -8,9 +9,10 @@ import { LOG_OUT } from "../auth/auth.const";
 export const devices = (state: MainState['devices'] = defaultDevices, action: Action) => {
   switch (action.type) {
     case GET_TEMPERATURE_SENESORS:
+    case GET_DEVICES:
       return {
         ...state,
-        ...action.payload,
+        tempHumSensors: action.payload.tempHumSensors,
       }
     case LOG_OUT:
       return defaultDevices;

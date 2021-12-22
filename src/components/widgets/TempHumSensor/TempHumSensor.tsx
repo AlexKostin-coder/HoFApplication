@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import React, { FC } from 'react'
 
-import Temperature from '../../../assets/icons/temperature';
+import Temperature from '../../../assets/icons/temperature.svg';
 import WeatherDropsRain from '../../../assets/icons/weather-drops-rain.svg';
 import { styles } from './TempHumSensor.style';
 
@@ -34,15 +34,11 @@ const TempHumSensor: FC<TempHumSensorProps> = props => {
 
   return (
     <TouchableOpacity style={styles.container}>
-      <Image
-        style={{ width: 50, height: 50, marginRight: 5, }}
-        resizeMode='cover'
-        source={
-          require('../../../assets/images/tempsensor.jpg')
-        }
-      />
-      <View style={styles.detail_sensor}>
-        <Text style={styles.text}>{name}</Text>
+      <View style={styles.details}>
+        <View>
+          <Text style={styles.text}>{name}</Text>
+          <Text style={[styles.text, { fontWeight: 'normal', color: 'grey', fontSize: 12 }]}>Sensor</Text>
+        </View>
         <View style={styles.info_sensor}>
           <View style={styles.info_sensor_item}>
             <Temperature
@@ -50,7 +46,7 @@ const TempHumSensor: FC<TempHumSensorProps> = props => {
               height={18}
               fill={'#008CCC'}
             />
-            <Text style={styles.text}>
+            <Text style={[styles.text, { fontWeight: 'normal', color: 'grey' }]}>
               {temperature !== "undefined" ? temperature : ""}
             </Text>
           </View>
@@ -63,7 +59,7 @@ const TempHumSensor: FC<TempHumSensorProps> = props => {
                     height={18}
                     fill={'#008CCC'}
                   />
-                  <Text style={styles.text}>
+                  <Text style={[styles.text, { fontWeight: 'normal', color: 'grey' }]}>
                     {hymidity !== "undefined" ? hymidity : ""}
                   </Text>
                 </>
@@ -71,6 +67,15 @@ const TempHumSensor: FC<TempHumSensorProps> = props => {
             }
           </View>
         </View>
+      </View>
+      <View style={styles.image_wrapper}>
+        <Image
+          style={styles.image}
+          resizeMode='cover'
+          source={
+            require('../../../assets/images/tempsensor.jpg')
+          }
+        />
       </View>
     </TouchableOpacity>
   )

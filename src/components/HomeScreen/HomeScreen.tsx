@@ -1,4 +1,8 @@
 import {
+  DEVICES_SCREEN,
+  ROOM_SCREEN
+} from '../../core/navigation/navigation.const';
+import {
   FlatList,
   Image,
   ImageBackground,
@@ -22,7 +26,6 @@ import {
 } from 'react-redux';
 
 import Avatar from '../widgets/Avatar/Avatar';
-import { DEVICES_SCREEN } from '../../core/navigation/navigation.const';
 import { authUserSelector } from '../../core/users/users.selectors';
 import { getRooms } from '../../core/rooms/rooms.actions';
 import { logOut } from '../../core/auth/auth.actions';
@@ -132,6 +135,7 @@ const HomeScreen: FC<HomeScreenProps> = props => {
               <TouchableOpacity
                 style={[styles.room, addRoom ? styles.room_add : {}]}
                 activeOpacity={0.6}
+                onPress={() => navigation.navigate(ROOM_SCREEN, { roomId: _id, name })}
               >
                 {
                   addRoom

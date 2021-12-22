@@ -4,13 +4,13 @@ export const styles = StyleSheet.create({
   container: {
     paddingVertical: 10,
     paddingTop: 20,
+    paddingHorizontal: 10,
     flexDirection: 'row',
     alignItems: 'center',
   },
   back_btn_wrapper: {
     flex: 1,
-    justifyContent: 'center',
-    marginLeft: 15
+    alignItems: 'flex-start'
   },
   back_btn: {
     width: 40,
@@ -23,11 +23,16 @@ export const styles = StyleSheet.create({
   },
   title_wrapper: {
     flex: 4,
-    marginLeft: 15
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   title: {
     fontWeight: 'bold',
     fontSize: 18,
     color: "#333333",
+  },
+  other_btn: {
+    flex: 1,
+    alignItems: 'flex-end',
   }
 });
