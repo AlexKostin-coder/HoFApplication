@@ -15,6 +15,7 @@ import {
   useSelector
 } from 'react-redux';
 
+import { HANDLE_ROOM_SCREEN } from '../../core/navigation/navigation.const';
 import Header from '../widgets/Header/Header';
 import { MainStackParamList } from '../Navigation/MainStack';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -55,7 +56,6 @@ const RoomScreen: FC<RoomScreenProps> = props => {
 
   const {
     roomId,
-    name,
   } = route.params;
 
   const devices = useSelector(tempHumSensorsSelector);
@@ -63,11 +63,15 @@ const RoomScreen: FC<RoomScreenProps> = props => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
 
-  const currentRoom = rooms[String(roomId)];
+  const {
+    id_Sensor,
+    name,
+    _id,
+  } = rooms[String(roomId)] || {};
 
-  const devicesRoom = currentRoom.id_Sensor?.length &&
+  const devicesRoom = id_Sensor?.length &&
     Object.keys(devices).length
-    ? currentRoom.id_Sensor.map((id_Sensor) => devices[id_Sensor] || {})
+    ? id_Sensor.map((id_Sensor) => devices[id_Sensor] || {})
     : [];
 
   const getDataRoom = async () => {
@@ -85,7 +89,7 @@ const RoomScreen: FC<RoomScreenProps> = props => {
       <Header
         title={name}
         onBack={() => navigation.goBack()}
-        onHandle={() => { console.log('12'); }}
+        onHandle={() => navigation.navigate(HANDLE_ROOM_SCREEN, { roomId: _id })}
       />
       <View style={styles.content}>
         <View style={styles.categories}>
