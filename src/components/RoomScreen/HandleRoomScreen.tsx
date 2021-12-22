@@ -19,17 +19,18 @@ interface HandleRoomScreenProps {
 const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
   const {
     route,
-    navigation
+    navigation,
   } = props;
 
   const {
-    roomId
+    roomId,
+    type,
   } = route.params;
 
   return (
     <View style={styles.container}>
       <Header
-        title={'Редагування'}
+        title={type == 'edit' ? 'Редагування' : 'Додати кімнату'}
         onBack={() => navigation.goBack()}
       />
       <Text></Text>

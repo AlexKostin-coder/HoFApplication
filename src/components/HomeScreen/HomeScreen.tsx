@@ -1,5 +1,6 @@
 import {
   DEVICES_SCREEN,
+  HANDLE_ROOM_SCREEN,
   ROOM_SCREEN
 } from '../../core/navigation/navigation.const';
 import {
@@ -135,7 +136,7 @@ const HomeScreen: FC<HomeScreenProps> = props => {
               <TouchableOpacity
                 style={[styles.room, addRoom ? styles.room_add : {}]}
                 activeOpacity={0.6}
-                onPress={() => navigation.navigate(ROOM_SCREEN, { roomId: _id, name })}
+                onPress={() => navigation.navigate(addRoom ? HANDLE_ROOM_SCREEN : ROOM_SCREEN, { roomId: _id, type: 'add' })}
               >
                 {
                   addRoom

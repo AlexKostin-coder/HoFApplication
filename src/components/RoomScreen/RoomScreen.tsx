@@ -89,7 +89,7 @@ const RoomScreen: FC<RoomScreenProps> = props => {
       <Header
         title={name}
         onBack={() => navigation.goBack()}
-        onHandle={() => navigation.navigate(HANDLE_ROOM_SCREEN, { roomId: _id })}
+        onHandle={() => navigation.navigate(HANDLE_ROOM_SCREEN, { roomId: _id, type: 'edit' })}
       />
       <View style={styles.content}>
         <View style={styles.categories}>

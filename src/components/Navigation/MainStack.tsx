@@ -20,9 +20,11 @@ export type MainStackParamList = {
   },
   Room: {
     roomId: String,
+    type: 'edit' | 'add',
   },
   HandleRoom: {
     roomId: String,
+    type: 'edit' | 'add',
   }
 };
 
