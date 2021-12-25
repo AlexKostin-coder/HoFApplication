@@ -99,7 +99,7 @@ const HomeScreen: FC<HomeScreenProps> = props => {
       return { ...rooms[roomId] };
     });
 
-  const hasDevices = Object.keys(tempHumSensors).length > 1;
+  const hasDevices = true; //Object.keys(tempHumSensors).length
 
   return (
     <View style={styles.container}>
