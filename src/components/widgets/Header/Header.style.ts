@@ -31,6 +31,10 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     color: "#333333",
   },
+  subtitle: {
+    fontSize: 14,
+    color: '#CE3B54'
+  },
   other_btn: {
     flex: 1,
     alignItems: 'flex-end',

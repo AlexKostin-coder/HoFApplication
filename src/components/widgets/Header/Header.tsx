@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, ReactElement } from 'react';
 import {
   Text,
   TouchableOpacity,
@@ -6,21 +6,24 @@ import {
 } from 'react-native';
 
 import ArrowLeft from '../../../assets/icons/arrow-left.svg';
-import Settings from '../../../assets/icons/settings.svg';
 import { styles } from './Header.style';
 
 interface Header {
   title: String,
+  subtitle?: String,
   onBack: () => void,
   onHandle?: () => void
+  iconHandle?: ReactElement
 }
 
 const Header: FC<Header> = props => {
 
   const {
     title,
+    subtitle,
     onBack,
-    onHandle
+    onHandle,
+    iconHandle
   } = props;
 
   return (
@@ -39,6 +42,11 @@ const Header: FC<Header> = props => {
       </View>
       <View style={styles.title_wrapper}>
         <Text style={styles.title}>{title}</Text>
+        {
+          subtitle
+            ? (<Text style={styles.subtitle}>{subtitle}</Text>)
+            : null
+        }
       </View>
       <View style={styles.other_btn}>
         {
@@ -47,11 +55,7 @@ const Header: FC<Header> = props => {
               style={styles.back_btn}
               onPress={() => onHandle()}
             >
-              <Settings
-                width={18}
-                height={18}
-                fill="#333333"
-              />
+              {iconHandle}
             </TouchableOpacity>
             : null
         }

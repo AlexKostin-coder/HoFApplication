@@ -19,6 +19,7 @@ import { HANDLE_ROOM_SCREEN } from '../../core/navigation/navigation.const';
 import Header from '../widgets/Header/Header';
 import { MainStackParamList } from '../Navigation/MainStack';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import Settings from '../../assets/icons/settings.svg';
 import TempHumSensor from '../widgets/TempHumSensor/TempHumSensor';
 import Temperature from '../../assets/icons/temperature.svg';
 import { getDevicesRoom } from '../../core/rooms/rooms.actions';
@@ -90,6 +91,13 @@ const RoomScreen: FC<RoomScreenProps> = props => {
         title={name}
         onBack={() => navigation.goBack()}
         onHandle={() => navigation.navigate(HANDLE_ROOM_SCREEN, { roomId: _id, type: 'edit' })}
+        iconHandle={
+          <Settings
+            width={18}
+            height={18}
+            fill={'#333333'}
+          />
+        }
       />
       <View style={styles.content}>
         <View style={styles.categories}>

@@ -21,7 +21,7 @@ export const getAuth = (email: string, password: string) => async (
 		});
 
 	} catch (e: any) {
-		dispatch(
+		return dispatch(
 			setMessages({
 				type: 'warning',
 				text: e.message,
@@ -41,11 +41,11 @@ export const logOut = () => async (
 			payload: {}
 		});
 	} catch (e: any) {
-		dispatch(
+		return dispatch(
 			setMessages({
 				type: 'warning',
 				text: e.message,
 			})
-		)
+		);
 	}
 }

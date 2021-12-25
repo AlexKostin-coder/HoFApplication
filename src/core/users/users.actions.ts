@@ -17,11 +17,11 @@ export const getUser = () => async (
     });
 
   } catch (e: any) {
-    dispatch(
+    return dispatch(
       setMessages({
         type: 'warning',
         text: e.message,
       })
-    )
+    );
   }
 }
