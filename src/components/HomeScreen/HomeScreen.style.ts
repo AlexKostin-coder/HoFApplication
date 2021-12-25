@@ -116,5 +116,10 @@ export const styles = StyleSheet.create({
   },
   catagories_device_text: {
     color: 'grey'
+  },
+  no_devices: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: 'center'
   }
 });

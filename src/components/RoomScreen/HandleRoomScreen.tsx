@@ -71,9 +71,11 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
         }
       }
       else {
-        await dispatch(createRoom({ name: roomName }));
-        await dispatch(getRooms());
-        navigation.goBack();
+        if (roomName) {
+          await dispatch(createRoom({ name: roomName }));
+          await dispatch(getRooms());
+          navigation.goBack();
+        }
       }
     } catch (e) {
       console.log({ e });

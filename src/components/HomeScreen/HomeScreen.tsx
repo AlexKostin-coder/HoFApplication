@@ -32,6 +32,7 @@ import { getRooms } from '../../core/rooms/rooms.actions';
 import { logOut } from '../../core/auth/auth.actions';
 import { roomsSelector } from '../../core/rooms/rooms.selectors';
 import { styles } from './HomeScreen.style';
+import { tempHumSensorsSelector } from '../../core/devices/devices.selectors';
 
 const catagoriesDevice = [
   {
@@ -73,6 +74,7 @@ const HomeScreen: FC<HomeScreenProps> = props => {
 
   const authUser = useSelector(authUserSelector);
   const rooms = useSelector(roomsSelector);
+  const tempHumSensors = useSelector(tempHumSensorsSelector);
 
   const {
     name,
@@ -96,6 +98,8 @@ const HomeScreen: FC<HomeScreenProps> = props => {
     .map((roomId, index) => {
       return { ...rooms[roomId] };
     });
+
+  const hasDevices = Object.keys(tempHumSensors).length > 1;
 
   return (
     <View style={styles.container}>
@@ -174,42 +178,52 @@ const HomeScreen: FC<HomeScreenProps> = props => {
       </View>
       <View style={styles.devices}>
         <Text style={styles.devices_title}>Пристрої</Text>
-        <FlatList
-          data={catagoriesDevice.concat().reverse()} // TODO тимчасово
-          style={styles.catagories_device_list}
-          keyExtractor={(item, index) => `${item.id}-${index}`}
-          numColumns={2}
-          renderItem={({ item: catagoryDevice, index }) => {
-            const {
-              id: categoryId,
-              name,
-              image_id,
-            } = catagoryDevice;
+        {
+          hasDevices
+            ? (
+              <FlatList
+                data={catagoriesDevice.concat().reverse()} // TODO тимчасово
+                style={styles.catagories_device_list}
+                keyExtractor={(item, index) => `${item.id}-${index}`}
+                numColumns={2}
+                renderItem={({ item: catagoryDevice, index }) => {
+                  const {
+                    id: categoryId,
+                    name,
+                    image_id,
+                  } = catagoryDevice;
 
-            return (
-              <TouchableOpacity
-                style={styles.catagories_device}
-                activeOpacity={0.6}
-                onPress={() => {
-                  navigation.navigate(DEVICES_SCREEN, {
-                    categoryId,
-                    title: name
-                  })
+                  return (
+                    <TouchableOpacity
+                      style={styles.catagories_device}
+                      activeOpacity={0.6}
+                      onPress={() => {
+                        navigation.navigate(DEVICES_SCREEN, {
+                          categoryId,
+                          title: name
+                        })
+                      }}
+                    >
+                      <View style={styles.catagories_device_content}>
+                        <Image
+                          style={styles.catagories_device_image}
+                          source={
+                            require('../../assets/images/tempsensor.jpg')
+                          }
+                        />
+                        <Text style={styles.catagories_device_text}>{name}</Text>
+                      </View>
+                    </TouchableOpacity>
+                  )
                 }}
-              >
-                <View style={styles.catagories_device_content}>
-                  <Image
-                    style={styles.catagories_device_image}
-                    source={
-                      require('../../assets/images/tempsensor.jpg')
-                    }
-                  />
-                  <Text style={styles.catagories_device_text}>{name}</Text>
-                </View>
-              </TouchableOpacity>
+              />
             )
-          }}
-        />
+            : (
+              <View style={styles.no_devices}>
+                <Text>Натисність "+", щоб додати пристрої</Text>
+              </View>
+            )
+        }
       </View>
     </View >
   )
