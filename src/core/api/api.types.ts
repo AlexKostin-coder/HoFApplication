@@ -5,7 +5,7 @@ export type Headers = {
 	'Authorization'?: string,
 };
 
-export type Methods = 'POST' | 'GET' | 'DELETE' | 'PUT';
+export type Methods = 'POST' | 'GET' | 'DELETE' | 'PUT' | 'PATCH';
 
 export type ResponseData = {
 	status: number,
@@ -17,4 +17,5 @@ export type Api = (
 	method: Methods,
 	url: string,
 	payload?: object,
+	options?: { uploadImage: boolean }
 ) => Promise<ResponseData | never>

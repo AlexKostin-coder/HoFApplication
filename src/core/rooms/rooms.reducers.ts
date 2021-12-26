@@ -1,4 +1,5 @@
 import {
+  CREATE_ROOM,
   DELETE_ROOM,
   GET_ROOMS,
   defaultRooms
@@ -12,6 +13,11 @@ export const rooms = (state: MainState['rooms'] = defaultRooms, action: Action) 
       return {
         ...state,
         ...action.payload.rooms,
+      }
+    case CREATE_ROOM:
+      return {
+        ...state,
+        [action.payload._id]: { ...action.payload }
       }
     case DELETE_ROOM:
       return {

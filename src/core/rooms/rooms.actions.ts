@@ -3,6 +3,7 @@ import {
   DELETE_ROOM,
   EDIT_ROOM,
   GET_ROOMS,
+  UPLOAD_IMAGE_ROOM,
 } from "./rooms.const";
 
 import { GET_DEVICES } from './../devices/devices.const';
@@ -16,7 +17,7 @@ export const getRooms = () => async (
 ) => {
   try {
 
-    const res = await api('GET', 'sensors/user/rooms');
+    const res = await api('GET', 'rooms');
 
     const rooms = normalizeDate(res.data, 'rooms', '_id');
 
@@ -66,12 +67,7 @@ export const editRoom = (data: { roomId: String, name: String }) => async (
 ) => {
   try {
 
-    const {
-      roomId,
-      name
-    } = data;
-
-    const res = await api('PUT', 'sensors/user/rooms', { id: roomId, change: name });
+    const res = await api('PATCH', 'rooms', data);
 
     return dispatch({
       type: EDIT_ROOM,
@@ -88,22 +84,18 @@ export const editRoom = (data: { roomId: String, name: String }) => async (
   }
 }
 
-export const createRoom = (data: { name: String }) => async (
+export const createRoom = (data: { name: String, devices_id: Array<String> }) => async (
   dispatch: Dispatch,
   getState: GetStateType,
   api: API
 ) => {
   try {
 
-    const {
-      name
-    } = data;
-
-    const res = await api('POST', 'sensors/user/rooms', { name });
+    const res = await api('POST', 'rooms', data);
 
     return dispatch({
       type: CREATE_ROOM,
-      payload: {}
+      payload: res.data
     });
 
   } catch (e: any) {
@@ -122,7 +114,7 @@ export const deleteRoom = (roomId: String) => async (
   api: API
 ) => {
   try {
-    const res = await api('DELETE', 'sensors/user/rooms', { id_Room: roomId });
+    const res = await api('DELETE', 'rooms', { roomId });
 
     return dispatch({
       type: DELETE_ROOM,
@@ -138,4 +130,46 @@ export const deleteRoom = (roomId: String) => async (
     );
   }
 };
+
+export const uploadImageRoom = (
+  imageData: {
+    height: number,
+    uri: String,
+    width: number,
+    fileName: String
+    type: String
+    fileSize: number,
+    roomId: String
+  }
+) => async (
+  dispatch: Dispatch,
+  getState: GetStateType,
+  api: API
+) => {
+    try {
+
+      const data = new FormData();
+      data.append('roomId', imageData.roomId);
+      data.append('fileData', {
+        uri: imageData.uri,
+        type: imageData.type,
+        name: imageData.fileName,
+      });
+
+      const res = await api('POST', 'rooms/uploadImage', data, { uploadImage: true });
+
+      return dispatch({
+        type: UPLOAD_IMAGE_ROOM,
+        payload: {},
+      });
+
+    } catch (e: any) {
+      return dispatch(
+        setMessages({
+          type: 'warning',
+          text: e.message,
+        })
+      );
+    }
+  };
 

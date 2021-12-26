@@ -28,6 +28,7 @@ import {
 
 import Avatar from '../widgets/Avatar/Avatar';
 import { authUserSelector } from '../../core/users/users.selectors';
+import { getCurrentUrl } from '../../core/tools/getCurrentUrl';
 import { getRooms } from '../../core/rooms/rooms.actions';
 import { logOut } from '../../core/auth/auth.actions';
 import { roomsSelector } from '../../core/rooms/rooms.selectors';
@@ -128,6 +129,7 @@ const HomeScreen: FC<HomeScreenProps> = props => {
               id_Sensor,
               name,
               _id,
+              image_id,
             } = room;
 
             const addRoom = _id === ""
@@ -154,7 +156,7 @@ const HomeScreen: FC<HomeScreenProps> = props => {
                     : (
                       <ImageBackground
                         source={
-                          require('../../assets/images/test-room.jpg')
+                          { uri: `${getCurrentUrl()}images/${image_id}` }
                         }
                         resizeMode="cover"
                         borderRadius={12}

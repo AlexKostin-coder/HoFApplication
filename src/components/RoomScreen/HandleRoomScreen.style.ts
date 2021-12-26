@@ -6,13 +6,10 @@ export const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 10,
-    paddingTop: 16,
   },
   image_wrapper: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: '100%',
+    height: 200,
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 5,
@@ -22,27 +19,45 @@ export const styles = StyleSheet.create({
   border: {
     borderBottomWidth: .5,
     borderColor: '#333333',
-    marginLeft: 60,
+  },
+  info_room: {
+    paddingHorizontal: 10,
+    marginTop: 20,
   },
   edit_info_room_block: {
-    marginLeft: 20,
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   name: {
     fontSize: 16,
     color: 'grey'
   },
   textInput: {
-    padding: 0
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center'
+    padding: 0,
   },
   icon_camera: {
     position: 'absolute'
+  },
+  image: {
+    width: '100%',
+    height: 200,
+  },
+  label: {
+    fontSize: 16,
+    color: 'black',
+    fontWeight: 'bold',
+    marginBottom: 6,
+  },
+  handle_btn: {
+    position: 'absolute',
+    bottom: 20,
+    right: 0,
+    left: 0
+  },
+  handle_btn_title: {
+    fontSize: 18,
+    color: 'green',
+    textAlign: 'center'
   }
 });

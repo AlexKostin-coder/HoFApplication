@@ -1,11 +1,16 @@
 import {
   Alert,
+  Button,
   Image,
   Text,
   TextInput,
   TouchableOpacity,
   View
 } from 'react-native';
+import {
+  CREATE_ROOM,
+  UPLOAD_IMAGE_ROOM
+} from '../../core/rooms/rooms.const';
 import {
   CameraOptions,
   launchCamera,
@@ -21,6 +26,7 @@ import {
   deleteRoom,
   editRoom,
   getRooms,
+  uploadImageRoom,
 } from '../../core/rooms/rooms.actions';
 import {
   useDispatch,
@@ -36,6 +42,7 @@ import { MainStackParamList } from '../Navigation/MainStack';
 import { Menu } from 'native-base';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Trash from '../../assets/icons/trash.svg';
+import { getCurrentUrl } from '../../core/tools/getCurrentUrl';
 import { requestCameraPermission } from '../../handlers/PermissionAndroid';
 import { roomsSelector } from '../../core/rooms/rooms.selectors';
 import { styles } from './HandleRoomScreen.style';
@@ -71,7 +78,8 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
   const dispatch = useDispatch();
 
   const {
-    name
+    name,
+    image_id,
   } = rooms[String(roomId)] || {};
 
   const [editableName, setEditableName] = useState<boolean>(false);
@@ -91,16 +99,30 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
     setEditableName(false);
     try {
       if (type === 'edit') {
-        if (name !== roomName) {
-          await dispatch(editRoom({ roomId, name: roomName }));
-          await dispatch(getRooms());
+        await dispatch(editRoom({ roomId, name: roomName }));
+        if (imageData.uri) {
+          await dispatch(uploadImageRoom({ ...imageData, roomId }));
         }
+        await dispatch(getRooms());
       }
       else {
         if (roomName) {
-          await dispatch(createRoom({ name: roomName }));
-          await dispatch(getRooms());
-          navigation.goBack();
+          const res = await dispatch(createRoom({
+            name: roomName,
+            devices_id: []
+          }));
+          if (res.type === CREATE_ROOM) {
+            const newRoomId = res.payload._id;
+            if (imageData.uri) {
+              const res = await dispatch(uploadImageRoom({ ...imageData, roomId: newRoomId }));
+              if (res.type === UPLOAD_IMAGE_ROOM) {
+                await dispatch(getRooms());
+                return navigation.goBack();
+              }
+            }
+            await dispatch(getRooms());
+            navigation.goBack();
+          }
         }
       }
     } catch (e) {
@@ -148,22 +170,19 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
 
   const chooseImage = async (type: 'camera' | 'gallery') => {
     const result = await requestCameraPermission();
-    let imageData = {};
+    let data = {};
 
     const options: CameraOptions = {
       mediaType: 'photo',
-      maxWidth: 400,
-      maxHeight: 400,
-      quality: 0,
     };
     if (result) {
       if (type === 'camera') {
-        imageData = await launchCamera(options);
+        data = await launchCamera(options);
       } else if (type === 'gallery') {
-        imageData = await launchImageLibrary(options);
+        data = await launchImageLibrary(options);
       }
 
-      if (!imageData.didCancel) {
+      if (!data.didCancel) {
         const {
           height = 0,
           uri = "",
@@ -171,7 +190,7 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
           fileName = "",
           type = "",
           fileSize = 0,
-        } = imageData.assets[0] || {};
+        } = data.assets[0] || {};
 
         setImageData({
           height,
@@ -200,64 +219,67 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
         {...type === 'edit' ? editProps : {}}
       />
       <View style={styles.content}>
-        <View style={styles.header}>
-          <Menu
-            w="160"
-            trigger={(triggerProps) => {
-              return (
-                <TouchableOpacity
-                  style={styles.image_wrapper}
-                  {...triggerProps}
-                >
-                  {
-                    imageData.uri ?
+        <Menu
+          w="160"
+          trigger={(triggerProps) => {
+            return (
+              <TouchableOpacity
+                style={styles.image_wrapper}
+                {...triggerProps}
+              >
+                {
+                  imageData.uri || image_id
+                    ? (
                       <Image
-                        style={{ width: 50, height: 50, borderRadius: 25 }}
+                        style={styles.image}
+                        resizeMode='cover'
                         source={{
-                          uri: imageData.uri,
+                          uri: imageData.uri ? imageData.uri : `${getCurrentUrl()}images/${image_id}`,
                         }}
                       />
-                      : null
-                  }
-                  <View style={styles.icon_camera}>
-                    <Camera
-                      width={20}
-                      height={20}
-                      fill={
-                        imageData.uri
-                          ? 'white'
-                          : '#333333'
-                      }
-                    />
-                  </View>
-                </TouchableOpacity>
-              )
-            }}
-          >
-            <Menu.Item onPress={() => chooseImage('camera')}>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Camera
-                  width={20}
-                  height={20}
-                  fill={'#333333'}
-                />
-                <Text style={{ marginLeft: 10, fontSize: 14 }}>Камера</Text>
-              </View>
-              <View style={[styles.border, { marginLeft: 0 }]} />
-            </Menu.Item>
-            <Menu.Item onPress={() => chooseImage('gallery')}>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <GalleryPhoto
-                  width={20}
-                  height={20}
-                  fill={'#333333'}
-                />
-                <Text style={{ marginLeft: 10, fontSize: 14 }}>Галерея</Text>
-              </View>
-              <View style={[styles.border, { marginLeft: 0 }]} />
-            </Menu.Item>
-          </Menu>
-
+                    )
+                    : null
+                }
+                <View style={styles.icon_camera}>
+                  <Camera
+                    width={20}
+                    height={20}
+                    fill={
+                      imageData.uri || image_id
+                        ? 'white'
+                        : '#333333'
+                    }
+                  />
+                </View>
+              </TouchableOpacity>
+            )
+          }}
+        >
+          <Menu.Item onPress={() => chooseImage('camera')}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Camera
+                width={20}
+                height={20}
+                fill={'#333333'}
+              />
+              <Text style={{ marginLeft: 10, fontSize: 14, color: 'grey' }}>Камера</Text>
+            </View>
+            <View style={[styles.border, { marginLeft: 0 }]} />
+          </Menu.Item>
+          <Menu.Item onPress={() => chooseImage('gallery')}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <GalleryPhoto
+                width={20}
+                height={20}
+                fill={'#333333'}
+              />
+              <Text style={{ marginLeft: 10, fontSize: 14, color: 'grey' }}>Галерея</Text>
+            </View>
+            <View style={[styles.border, { marginLeft: 0 }]} />
+          </Menu.Item>
+        </Menu>
+        <View style={styles.info_room}>
+          <Text style={styles.label}>Назва:</Text>
           {
             !editableName
               ? (
@@ -290,13 +312,20 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
                     placeholderTextColor={'grey'}
                     style={[styles.name, styles.textInput]}
                     onChangeText={(text) => setRoomName(text)}
-                    onSubmitEditing={handleRoom}
                   />
                 </View>
               )
           }
+          <View style={[styles.border, { marginTop: 6, }]} />
         </View>
-        <View style={styles.border} />
+        <TouchableOpacity
+          onPress={handleRoom}
+          style={styles.handle_btn}
+        >
+          <Text style={styles.handle_btn_title}>
+            {type === "edit" ? "Зберегти" : "Додати"}
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   )

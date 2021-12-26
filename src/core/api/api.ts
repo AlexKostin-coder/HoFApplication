@@ -4,16 +4,20 @@ import {
 	ResponseData,
 } from "./api.types";
 
+import { IS_LOCAL } from "./environment.const";
 import { authTokenSelector } from "../auth/auth.selectors";
 import axios from "axios";
 
-const DOMAIN = 'http://hofenterprise.com/';
+const DOMAIN = IS_LOCAL
+	? 'http://192.168.0.102:80/api/'
+	: 'http://hofenterprise.com/';
 
 export const sendRequest = async (
 	url: string,
 	method: Methods,
 	headers: Headers,
-	payload?: object
+	payload?: object,
+	options?: { uploadImage: boolean }
 ) => {
 
 	let result: ResponseData = {
@@ -25,11 +29,20 @@ export const sendRequest = async (
 	try {
 		let sourceUrl = `${DOMAIN}${url}`;
 
+		const {
+			uploadImage = false,
+		} = options || {};
+
 		const response = await axios({
 			method,
 			url: sourceUrl,
 			headers,
-			...(payload && method !== 'GET' ? { data: JSON.stringify(payload) } : {})
+			...(payload && method !== 'GET'
+				? uploadImage
+					? { data: payload }
+					: { data: JSON.stringify(payload) }
+				: {}
+			)
 		});
 
 		result = {
@@ -44,7 +57,7 @@ export const sendRequest = async (
 				result = {
 					status: e.response.status,
 					data: {},
-					errorText: e.response.data.error
+					errorText: e.response.data.errorText
 				};
 			}
 		} else {
@@ -59,15 +72,20 @@ export const createApi = (dispatch: Dispatch, getState: GetStateType) => async (
 	method: Methods,
 	url: string,
 	payload?: object,
+	options?: { uploadImage: boolean }
 ) => {
 
 	try {
 		const state = getState();
 		const authToken = authTokenSelector(state);
 
+		const {
+			uploadImage = false,
+		} = options || {};
+
 		const headers: Headers = {
 			'Accept': 'application/json',
-			'Content-Type': 'application/json',
+			'Content-Type': uploadImage ? 'multipart/form-data' : 'application/json',
 		};
 
 		if (authToken) {
@@ -78,7 +96,8 @@ export const createApi = (dispatch: Dispatch, getState: GetStateType) => async (
 			url,
 			method,
 			headers,
-			payload
+			payload,
+			options,
 		);
 
 		if (response.status >= 500) {
