@@ -16,7 +16,8 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 5,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    position: 'relative',
   },
   border: {
     borderBottomWidth: .5,
@@ -36,5 +37,12 @@ export const styles = StyleSheet.create({
   },
   textInput: {
     padding: 0
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  icon_camera: {
+    position: 'absolute'
   }
 });
