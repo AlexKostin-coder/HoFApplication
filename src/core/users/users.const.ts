@@ -4,14 +4,15 @@ import {
 } from "./users.types";
 
 export const GET_USER = 'GET_USER';
+export const EDIT_USER = 'EDIT_USER';
 
 export const defaultUser: User = {
-  user_id: '',
+  _id: '',
   name: '',
   email: '',
   photo: ''
 };
 
 export const defaultUsers: Users = {
-  [defaultUser.user_id]: defaultUser
+  [defaultUser._id]: defaultUser
 }

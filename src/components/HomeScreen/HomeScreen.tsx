@@ -22,6 +22,10 @@ import React, {
   useState
 } from 'react';
 import {
+  currentHouseIdSelector,
+  housesSelector
+} from '../../core/houses/houses.selectors';
+import {
   useDispatch,
   useSelector
 } from 'react-redux';
@@ -29,6 +33,7 @@ import {
 import Avatar from '../widgets/Avatar/Avatar';
 import { authUserSelector } from '../../core/users/users.selectors';
 import { getCurrentUrl } from '../../core/tools/getCurrentUrl';
+import { getHouses } from '../../core/houses/houses.actions';
 import { getRooms } from '../../core/rooms/rooms.actions';
 import { logOut } from '../../core/auth/auth.actions';
 import { roomsSelector } from '../../core/rooms/rooms.selectors';
@@ -63,9 +68,18 @@ const HomeScreen: FC<HomeScreenProps> = props => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const authUser = useSelector(authUserSelector);
+  const rooms = useSelector(roomsSelector);
+  const houses = useSelector(housesSelector);
+  const currentHouseId = useSelector(currentHouseIdSelector);
+  const tempHumSensors = useSelector(tempHumSensorsSelector);
+
   const getData = async () => {
     setIsLoading(true);
-    await dispatch(getRooms());
+    await dispatch(getHouses());
+    if (currentHouseId) {
+      await dispatch(getRooms(currentHouseId));
+    }
     setIsLoading(false);
   }
 
@@ -73,13 +87,9 @@ const HomeScreen: FC<HomeScreenProps> = props => {
     getData();
   }, []);
 
-  const authUser = useSelector(authUserSelector);
-  const rooms = useSelector(roomsSelector);
-  const tempHumSensors = useSelector(tempHumSensorsSelector);
-
   const {
     name,
-    user_id,
+    _id,
     photo,
     email,
   } = authUser || {};

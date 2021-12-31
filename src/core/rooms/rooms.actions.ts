@@ -10,14 +10,14 @@ import { GET_DEVICES } from './../devices/devices.const';
 import { normalizeDate } from "../tools/normalizeData";
 import { setMessages } from "../ui/ui.actions";
 
-export const getRooms = () => async (
+export const getRooms = (houseId: String) => async (
   dispatch: Dispatch,
   getState: GetStateType,
   api: API
 ) => {
   try {
 
-    const res = await api('GET', 'rooms');
+    const res = await api('POST', 'getRoomsByHouseId', { houseId });
 
     const rooms = normalizeDate(res.data, 'rooms', '_id');
 
@@ -69,9 +69,11 @@ export const editRoom = (data: { roomId: String, name: String }) => async (
 
     const res = await api('PATCH', 'rooms', data);
 
+    const { room, house } = res.data;
+
     return dispatch({
       type: EDIT_ROOM,
-      payload: {}
+      payload: { house, room }
     });
 
   } catch (e: any) {
@@ -84,7 +86,7 @@ export const editRoom = (data: { roomId: String, name: String }) => async (
   }
 }
 
-export const createRoom = (data: { name: String, devices_id: Array<String> }) => async (
+export const createRoom = (data: { houseId: String, name: String, devices_id: Array<String> }) => async (
   dispatch: Dispatch,
   getState: GetStateType,
   api: API
@@ -108,13 +110,13 @@ export const createRoom = (data: { name: String, devices_id: Array<String> }) =>
   }
 };
 
-export const deleteRoom = (roomId: String) => async (
+export const deleteRoom = (houseId: String, roomId: String) => async (
   dispatch: Dispatch,
   getState: GetStateType,
   api: API
 ) => {
   try {
-    const res = await api('DELETE', 'rooms', { roomId });
+    const res = await api('DELETE', 'rooms', { houseId, roomId });
 
     return dispatch({
       type: DELETE_ROOM,
@@ -160,7 +162,7 @@ export const uploadImageRoom = (
 
       return dispatch({
         type: UPLOAD_IMAGE_ROOM,
-        payload: {},
+        payload: res.data,
       });
 
     } catch (e: any) {

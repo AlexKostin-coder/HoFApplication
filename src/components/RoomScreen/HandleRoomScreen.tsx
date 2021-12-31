@@ -42,6 +42,7 @@ import { MainStackParamList } from '../Navigation/MainStack';
 import { Menu } from 'native-base';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Trash from '../../assets/icons/trash.svg';
+import { currentHouseIdSelector } from '../../core/houses/houses.selectors';
 import { getCurrentUrl } from '../../core/tools/getCurrentUrl';
 import { requestCameraPermission } from '../../handlers/PermissionAndroid';
 import { roomsSelector } from '../../core/rooms/rooms.selectors';
@@ -75,6 +76,7 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
   } = route.params;
 
   const rooms = useSelector(roomsSelector);
+  const currentHouseId = useSelector(currentHouseIdSelector);
   const dispatch = useDispatch();
 
   const {
@@ -103,11 +105,11 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
         if (imageData.uri) {
           await dispatch(uploadImageRoom({ ...imageData, roomId }));
         }
-        await dispatch(getRooms());
       }
       else {
         if (roomName) {
           const res = await dispatch(createRoom({
+            houseId: currentHouseId,
             name: roomName,
             devices_id: []
           }));
@@ -116,11 +118,9 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
             if (imageData.uri) {
               const res = await dispatch(uploadImageRoom({ ...imageData, roomId: newRoomId }));
               if (res.type === UPLOAD_IMAGE_ROOM) {
-                await dispatch(getRooms());
                 return navigation.goBack();
               }
             }
-            await dispatch(getRooms());
             navigation.goBack();
           }
         }
@@ -150,8 +150,8 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
 
   const handleDeleteRoom = async () => {
     try {
-      await dispatch(deleteRoom(roomId));
-      await dispatch(getRooms());
+      await dispatch(deleteRoom(currentHouseId, roomId));
+      await dispatch(getRooms(currentHouseId));
       navigation.navigate(HOME_SCREEN, {});
     } catch (e) {
       console.log({ e });

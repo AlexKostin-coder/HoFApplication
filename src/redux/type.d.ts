@@ -4,6 +4,7 @@ import { UIState } from './../core/ui/ui.types';
 import { Api } from './../core/api/api.types';
 import { Auth } from './../core/auth/actions.types';
 import { Users } from '../core/users/users.types';
+import { Houses, CurrentHouseId } from '../core/houses/houses.types';
 import { AnyAction, Store } from "redux";
 
 
@@ -13,7 +14,9 @@ declare global {
 		ui: UIState;
 		users: Users,
 		devices: Devices,
-		rooms: Rooms
+		rooms: Rooms,
+		houses: Houses
+		current_house_id: CurrentHouseId
 	};
 
 	type MainStorge = Store<MainState, AnyAction>;

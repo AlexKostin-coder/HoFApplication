@@ -11,7 +11,7 @@ export const getAuth = (email: string, password: string) => async (
 	api: API
 ) => {
 	try {
-		const res = await api('POST', 'users/login/app', { email, password });
+		const res = await api('POST', 'auth', { email, password });
 
 		const authToken: string = res.data.token;
 

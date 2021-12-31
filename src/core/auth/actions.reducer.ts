@@ -16,7 +16,7 @@ export const auth = (state: MainState['auth'] = defaultAuth, action: Action) => 
 		case GET_USER:
 			return {
 				...state,
-				user_id: action.payload.user_id,
+				user_id: action.payload._id,
 			}
 		case LOG_OUT:
 			return defaultAuth;

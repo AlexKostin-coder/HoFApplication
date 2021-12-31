@@ -8,7 +8,7 @@ import { LOG_OUT } from "../auth/auth.const";
 export const users = (state: MainState['users'] = defaultUsers, action: Action) => {
   switch (action.type) {
     case GET_USER:
-      const id = action.payload.user_id;
+      const id = action.payload._id;
       return {
         ...state,
         [id]: {
