@@ -9,7 +9,7 @@ import React, { FC } from 'react';
 
 import DevicesScreen from '../DevicesScreen/DevicesScreen';
 import HandleRoomScreen from '../RoomScreen/HandleRoomScreen';
-import HomeScreen from '../HomeScreen/HomeScreen';
+import MainTab from './MainTab';
 import ProfileScreen from '../ProfileScreen/ProfileScreen';
 import RoomScreen from '../RoomScreen/RoomScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -28,9 +28,7 @@ export type MainStackParamList = {
     roomId: String,
     type: 'edit' | 'add',
   }
-  Profile: {
-
-  }
+  Profile: {}
 };
 
 const Stack = createNativeStackNavigator<MainStackParamList>();
@@ -40,7 +38,7 @@ const MainStack: FC = () => {
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
     >
-      <Stack.Screen name={HOME_SCREEN} component={HomeScreen} />
+      <Stack.Screen name={HOME_SCREEN} component={MainTab} />
       <Stack.Screen name={DEVICES_SCREEN} component={DevicesScreen} />
       <Stack.Screen name={ROOM_SCREEN} component={RoomScreen} />
       <Stack.Screen name={HANDLE_ROOM_SCREEN} component={HandleRoomScreen} />
