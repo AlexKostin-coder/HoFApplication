@@ -2,13 +2,15 @@ import {
   DEVICES_SCREEN,
   HANDLE_ROOM_SCREEN,
   HOME_SCREEN,
-  ROOM_SCREEN
+  PROFILE_SCREEN,
+  ROOM_SCREEN,
 } from '../../core/navigation/navigation.const';
 import React, { FC } from 'react';
 
 import DevicesScreen from '../DevicesScreen/DevicesScreen';
 import HandleRoomScreen from '../RoomScreen/HandleRoomScreen';
 import HomeScreen from '../HomeScreen/HomeScreen';
+import ProfileScreen from '../ProfileScreen/ProfileScreen';
 import RoomScreen from '../RoomScreen/RoomScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -26,6 +28,9 @@ export type MainStackParamList = {
     roomId: String,
     type: 'edit' | 'add',
   }
+  Profile: {
+
+  }
 };
 
 const Stack = createNativeStackNavigator<MainStackParamList>();
@@ -39,6 +44,7 @@ const MainStack: FC = () => {
       <Stack.Screen name={DEVICES_SCREEN} component={DevicesScreen} />
       <Stack.Screen name={ROOM_SCREEN} component={RoomScreen} />
       <Stack.Screen name={HANDLE_ROOM_SCREEN} component={HandleRoomScreen} />
+      <Stack.Screen name={PROFILE_SCREEN} component={ProfileScreen} />
     </Stack.Navigator>
   )
 };

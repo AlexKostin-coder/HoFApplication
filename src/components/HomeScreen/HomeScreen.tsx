@@ -1,6 +1,7 @@
 import {
   DEVICES_SCREEN,
   HANDLE_ROOM_SCREEN,
+  PROFILE_SCREEN,
   ROOM_SCREEN
 } from '../../core/navigation/navigation.const';
 import {
@@ -89,9 +90,7 @@ const HomeScreen: FC<HomeScreenProps> = props => {
 
   const {
     name,
-    _id,
     photo,
-    email,
   } = authUser || {};
 
   const roomsData = Object.keys(rooms)
@@ -119,7 +118,7 @@ const HomeScreen: FC<HomeScreenProps> = props => {
           <Text style={styles.name}>Привіт, {name}</Text>
           <Text style={styles.welcome_title}>Офіс</Text>
         </View>
-        <TouchableOpacity onPress={async () => await dispatch(logOut())}>
+        <TouchableOpacity onPress={() => navigation.navigate(PROFILE_SCREEN, {})}>
           <Avatar
             photoId={photo}
             alt={name[0]?.toUpperCase() || ""}

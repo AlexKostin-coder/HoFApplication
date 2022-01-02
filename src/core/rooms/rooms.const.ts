@@ -7,6 +7,7 @@ export const defaultRoom = {
   _id: '',
   name: '',
   id_Sensor: [],
+  image_id: '',
 };
 export const defaultRooms = {
   [defaultRoom._id]: defaultRoom

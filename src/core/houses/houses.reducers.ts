@@ -5,6 +5,8 @@ import {
   defaultHouses
 } from "./houses.const";
 
+import { LOG_OUT } from "../auth/auth.const";
+
 export const houses = (state: MainState['houses'] = defaultHouses, action: Action) => {
   switch (action.type) {
     case GET_HOUSES:
@@ -12,6 +14,8 @@ export const houses = (state: MainState['houses'] = defaultHouses, action: Actio
         ...state,
         ...action.payload.houses,
       }
+    case LOG_OUT:
+      return defaultHouses;
     default:
       return state;
   }
@@ -23,6 +27,8 @@ export const currentHouseId = (state: MainState['current_house_id'] = defaultCur
       return {
         ...state,
       }
+    case LOG_OUT:
+      return defaultCurrentHouseId
     default:
       return state;
   }
