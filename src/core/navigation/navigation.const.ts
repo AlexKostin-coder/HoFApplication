@@ -4,3 +4,6 @@ export const DEVICES_SCREEN = 'Devices';
 export const ROOM_SCREEN = 'Room';
 export const HANDLE_ROOM_SCREEN = 'HandleRoom';
 export const PROFILE_SCREEN = 'Profile';
+export const LINK_DEVICES_SCREEN = 'LinkDevices';
+export const NOTIFICATIONS_SCREEN = 'Notifications';
+export const MAIN_TAB = 'MainTab';

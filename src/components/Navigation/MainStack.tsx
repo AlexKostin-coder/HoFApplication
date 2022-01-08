@@ -1,7 +1,7 @@
 import {
   DEVICES_SCREEN,
   HANDLE_ROOM_SCREEN,
-  HOME_SCREEN,
+  MAIN_TAB,
   PROFILE_SCREEN,
   ROOM_SCREEN,
 } from '../../core/navigation/navigation.const';
@@ -15,7 +15,7 @@ import RoomScreen from '../RoomScreen/RoomScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 export type MainStackParamList = {
-  Home: {},
+  MainTab: {},
   Devices: {
     categoryId: String
     title: String,
@@ -38,7 +38,7 @@ const MainStack: FC = () => {
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
     >
-      <Stack.Screen name={HOME_SCREEN} component={MainTab} />
+      <Stack.Screen name={MAIN_TAB} component={MainTab} />
       <Stack.Screen name={DEVICES_SCREEN} component={DevicesScreen} />
       <Stack.Screen name={ROOM_SCREEN} component={RoomScreen} />
       <Stack.Screen name={HANDLE_ROOM_SCREEN} component={HandleRoomScreen} />

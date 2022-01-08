@@ -36,8 +36,8 @@ import {
 import Camera from '../../assets/icons/camera.svg';
 import Edit from '../../assets/icons/edit.svg';
 import GalleryPhoto from '../../assets/icons/gallery-photo.svg';
-import { HOME_SCREEN } from '../../core/navigation/navigation.const';
 import Header from '../widgets/Header/Header';
+import { MAIN_TAB } from '../../core/navigation/navigation.const';
 import { MainStackParamList } from '../Navigation/MainStack';
 import { Menu } from 'native-base';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -152,7 +152,7 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
     try {
       await dispatch(deleteRoom(currentHouseId, roomId));
       await dispatch(getRooms(currentHouseId));
-      navigation.navigate(HOME_SCREEN, {});
+      navigation.navigate(MAIN_TAB, {});
     } catch (e) {
       console.log({ e });
     }
