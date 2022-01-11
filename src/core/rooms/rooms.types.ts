@@ -1,8 +1,9 @@
 export interface Room {
   _id: string,
   name: string,
-  id_Sensor: Array<string>
+  house_id: string,
   image_id: string,
+  count_devices: number
 };
 
 export interface Rooms {

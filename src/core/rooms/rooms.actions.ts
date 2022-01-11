@@ -86,7 +86,7 @@ export const editRoom = (data: { roomId: String, name: String }) => async (
   }
 }
 
-export const createRoom = (data: { houseId: String, name: String, devices_id: Array<String> }) => async (
+export const createRoom = (data: { houseId: String, name: String }) => async (
   dispatch: Dispatch,
   getState: GetStateType,
   api: API
@@ -97,7 +97,7 @@ export const createRoom = (data: { houseId: String, name: String, devices_id: Ar
 
     return dispatch({
       type: CREATE_ROOM,
-      payload: res.data
+      payload: res.data.room
     });
 
   } catch (e: any) {

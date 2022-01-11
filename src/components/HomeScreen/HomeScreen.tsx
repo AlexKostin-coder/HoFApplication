@@ -1,4 +1,8 @@
 import {
+  CheckIcon,
+  Select
+} from 'native-base';
+import {
   DEVICES_SCREEN,
   HANDLE_ROOM_SCREEN,
   PROFILE_SCREEN,
@@ -27,6 +31,10 @@ import {
   housesSelector
 } from '../../core/houses/houses.selectors';
 import {
+  getHouses,
+  setCurrentHouse
+} from '../../core/houses/houses.actions';
+import {
   useDispatch,
   useSelector
 } from 'react-redux';
@@ -34,12 +42,10 @@ import {
 import Avatar from '../widgets/Avatar/Avatar';
 import { authUserSelector } from '../../core/users/users.selectors';
 import { getCurrentUrl } from '../../core/tools/getCurrentUrl';
-import { getHouses } from '../../core/houses/houses.actions';
 import { getRooms } from '../../core/rooms/rooms.actions';
-import { logOut } from '../../core/auth/auth.actions';
+import { getUser } from '../../core/users/users.actions';
 import { roomsSelector } from '../../core/rooms/rooms.selectors';
 import { styles } from './HomeScreen.style';
-import { tempHumSensorsSelector } from '../../core/devices/devices.selectors';
 
 const catagoriesDevice = [
   {
@@ -67,16 +73,17 @@ const HomeScreen: FC<HomeScreenProps> = props => {
   } = props;
 
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const authUser = useSelector(authUserSelector);
   const rooms = useSelector(roomsSelector);
   const houses = useSelector(housesSelector);
   const currentHouseId = useSelector(currentHouseIdSelector);
-  const tempHumSensors = useSelector(tempHumSensorsSelector);
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const getData = async () => {
     setIsLoading(true);
+    await dispatch(getUser());
     await dispatch(getHouses());
     if (currentHouseId) {
       await dispatch(getRooms(currentHouseId));
@@ -88,35 +95,84 @@ const HomeScreen: FC<HomeScreenProps> = props => {
     getData();
   }, []);
 
+  const getDataForHouse = async (house_id: string) => {
+    setIsLoading(true);
+    if (house_id) {
+      await dispatch(getRooms(house_id));
+    }
+    setIsLoading(false);
+  }
+
+  const selectCurrentHouseId = (house_id: string) => {
+    dispatch(setCurrentHouse(house_id));
+    getDataForHouse(house_id);
+  }
+
   const {
     name,
     photo,
   } = authUser || {};
 
-  const roomsData = Object.keys(rooms)
-    .sort((a, b) => {
-      const roomIdA = rooms[a]._id;
-      const roomIdB = rooms[b]._id;
-      if (roomIdA < roomIdB) {
-        return 1;
-      }
-      if (roomIdA > roomIdB) {
-        return -1;
-      }
-      return 0;
-    })
-    .map((roomId, index) => {
-      return { ...rooms[roomId] };
-    });
-
-  const hasDevices = true; //Object.keys(tempHumSensors).length
+  const roomsData = Object.keys(rooms).length
+    ? Object.keys(rooms)
+      .sort((a, b) => {
+        const roomIdA = rooms[a]._id;
+        const roomIdB = rooms[b]._id;
+        if (roomIdA < roomIdB) {
+          return 1;
+        }
+        if (roomIdA > roomIdB) {
+          return -1;
+        }
+        return 0;
+      })
+      .filter((room_id) => {
+        const { house_id } = rooms[room_id];
+        return house_id === currentHouseId || house_id === ""
+      })
+      .map((roomId, index) => {
+        return { ...rooms[roomId] };
+      })
+    : [];
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View>
           <Text style={styles.name}>Привіт, {name}</Text>
-          <Text style={styles.welcome_title}>Офіс</Text>
+          <Select
+            selectedValue={currentHouseId}
+            p="0"
+            height={4}
+            fontSize={14}
+            color={'grey'}
+            variant="unstyled"
+            accessibilityLabel="Оберіть будинок"
+            placeholder="Оберіть будинок"
+            _selectedItem={{
+              endIcon: <CheckIcon size="5" />,
+            }}
+            mt={1}
+            onValueChange={selectCurrentHouseId}
+          >
+            {
+              Object.keys(houses).length
+                ? Object.keys(houses).map((house_id) => {
+                  const {
+                    name,
+                    _id,
+                  } = houses[house_id];
+                  return (
+                    <Select.Item
+                      key={_id}
+                      label={name}
+                      value={_id}
+                    />
+                  )
+                })
+                : null
+            }
+          </Select>
         </View>
         <TouchableOpacity onPress={() => navigation.navigate(PROFILE_SCREEN, {})}>
           <Avatar
@@ -135,17 +191,15 @@ const HomeScreen: FC<HomeScreenProps> = props => {
           horizontal={true}
           renderItem={({ item: room, index }) => {
             const {
-              id_Sensor,
               name,
               _id,
               image_id,
+              count_devices,
             } = room;
 
             const addRoom = _id === ""
               ? true
               : false;
-
-            const quantityDeviceRoom = id_Sensor?.length || 0;
 
             return (
               <TouchableOpacity
@@ -171,8 +225,8 @@ const HomeScreen: FC<HomeScreenProps> = props => {
                         borderRadius={12}
                         style={styles.room_content}
                       >
-                        <Text style={styles.room_name}>{name}</Text>
-                        <Text style={styles.room_quantity_device}>{quantityDeviceRoom} пристроїв</Text>
+                        <Text style={[styles.room_name, !image_id ? { color: 'black' } : {}]}>{name}</Text>
+                        <Text style={[styles.room_quantity_device, !image_id ? { color: 'black' } : {}]}>{count_devices} пристроїв</Text>
                       </ImageBackground>
                     )
                 }
@@ -189,52 +243,42 @@ const HomeScreen: FC<HomeScreenProps> = props => {
       </View>
       <View style={styles.devices}>
         <Text style={styles.devices_title}>Пристрої</Text>
-        {
-          hasDevices
-            ? (
-              <FlatList
-                data={catagoriesDevice.concat().reverse()} // TODO тимчасово
-                style={styles.catagories_device_list}
-                keyExtractor={(item, index) => `${item.id}-${index}`}
-                numColumns={2}
-                renderItem={({ item: catagoryDevice, index }) => {
-                  const {
-                    id: categoryId,
-                    name,
-                    image_id,
-                  } = catagoryDevice;
+        <FlatList
+          data={catagoriesDevice.concat().reverse()} // TODO тимчасово
+          style={styles.catagories_device_list}
+          keyExtractor={(item, index) => `${item.id}-${index}`}
+          numColumns={2}
+          renderItem={({ item: catagoryDevice, index }) => {
+            const {
+              id: categoryId,
+              name,
+              image_id,
+            } = catagoryDevice;
 
-                  return (
-                    <TouchableOpacity
-                      style={styles.catagories_device}
-                      activeOpacity={0.6}
-                      onPress={() => {
-                        navigation.navigate(DEVICES_SCREEN, {
-                          categoryId,
-                          title: name
-                        })
-                      }}
-                    >
-                      <View style={styles.catagories_device_content}>
-                        <Image
-                          style={styles.catagories_device_image}
-                          source={
-                            require('../../assets/images/tempsensor.jpg')
-                          }
-                        />
-                        <Text style={styles.catagories_device_text}>{name}</Text>
-                      </View>
-                    </TouchableOpacity>
-                  )
+            return (
+              <TouchableOpacity
+                style={styles.catagories_device}
+                activeOpacity={0.6}
+                onPress={() => {
+                  navigation.navigate(DEVICES_SCREEN, {
+                    categoryId,
+                    title: name
+                  })
                 }}
-              />
+              >
+                <View style={styles.catagories_device_content}>
+                  <Image
+                    style={styles.catagories_device_image}
+                    source={
+                      require('../../assets/images/tempsensor.jpg')
+                    }
+                  />
+                  <Text style={styles.catagories_device_text}>{name}</Text>
+                </View>
+              </TouchableOpacity>
             )
-            : (
-              <View style={styles.no_devices}>
-                <Text>Натисність "+", щоб додати пристрої</Text>
-              </View>
-            )
-        }
+          }}
+        />
       </View>
     </View >
   )

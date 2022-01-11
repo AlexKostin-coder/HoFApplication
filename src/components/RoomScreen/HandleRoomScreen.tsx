@@ -111,7 +111,6 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
           const res = await dispatch(createRoom({
             houseId: currentHouseId,
             name: roomName,
-            devices_id: []
           }));
           if (res.type === CREATE_ROOM) {
             const newRoomId = res.payload._id;

@@ -26,6 +26,7 @@ export const currentHouseId = (state: MainState['current_house_id'] = defaultCur
     case SET_CURRENT_HOUSE_ID:
       return {
         ...state,
+        _id: action.payload.house_id
       }
     case LOG_OUT:
       return defaultCurrentHouseId

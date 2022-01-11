@@ -11,7 +11,6 @@ import { validEmail, validPassword } from '../../core/tools/validationData';
 
 import { GET_AUTH } from '../../core/auth/auth.const';
 import { getAuth } from '../../core/auth/auth.actions';
-import { getUser } from '../../core/users/users.actions';
 import { styles } from './LoginScreen.style';
 import { useDispatch } from 'react-redux';
 
@@ -33,7 +32,6 @@ const LoginScreen: FC = () => {
       try {
         setIsLoading(true);
         await dispatch(getAuth(email, password));
-        await dispatch(getUser());
         setIsLoading(false);
       } catch (e) {
         setIsLoading(false);

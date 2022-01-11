@@ -1,7 +1,7 @@
 export const housesSelector = (state: MainState) => state.houses;
 export const currentHouseIdSelector = (state: MainState) => {
-  return state.current_house_id?._id
-    ? state.current_house_id?._id
+  return state.currentHouseId._id
+    ? state.currentHouseId._id
     : Object.keys(state.houses).length
       ? Object.keys(state.houses)
         .filter((houseId) => houseId)

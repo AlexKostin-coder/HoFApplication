@@ -1,4 +1,8 @@
-import { GET_HOUSES } from "./houses.const";
+import {
+  GET_HOUSES,
+  SET_CURRENT_HOUSE_ID
+} from "./houses.const";
+
 import { normalizeDate } from "../tools/normalizeData";
 import { setMessages } from "../ui/ui.actions";
 
@@ -25,5 +29,12 @@ export const getHouses = () => async (
         text: e.message,
       }),
     );
+  }
+}
+
+export const setCurrentHouse = (house_id: string) => {
+  return {
+    type: SET_CURRENT_HOUSE_ID,
+    payload: { house_id }
   }
 }
