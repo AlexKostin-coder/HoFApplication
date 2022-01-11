@@ -36,7 +36,8 @@ export const styles = StyleSheet.create({
   name: {
     marginTop: 4,
     fontSize: 24,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    color: 'black'
   },
   email: {
     color: 'grey'
@@ -63,6 +64,7 @@ export const styles = StyleSheet.create({
   },
   btn_title: {
     fontSize: 16,
-    fontWeight: '600'
+    fontWeight: '600',
+    color: 'grey'
   }
 });
