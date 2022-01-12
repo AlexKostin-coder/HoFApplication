@@ -45,6 +45,7 @@ import {
 
 import Avatar from '../widgets/Avatar/Avatar';
 import { authUserSelector } from '../../core/users/users.selectors';
+import { declOfNum } from '../../core/tools/declOfNum';
 import { getCurrentUrl } from '../../core/tools/getCurrentUrl';
 import { getRooms } from '../../core/rooms/rooms.actions';
 import { getUser } from '../../core/users/users.actions';
@@ -238,7 +239,7 @@ const HomeScreen: FC<HomeScreenProps> = props => {
                         style={styles.room_content}
                       >
                         <Text style={[styles.room_name, !image_id ? { color: 'black' } : {}]}>{name}</Text>
-                        <Text style={[styles.room_quantity_device, !image_id ? { color: 'black' } : {}]}>{count_devices} пристроїв</Text>
+                        <Text style={[styles.room_quantity_device, !image_id ? { color: 'grey' } : {}]}>{count_devices} {declOfNum(0, ['пристрій', 'пристрої', 'пристроїв'])}</Text>
                       </ImageBackground>
                     )
                 }

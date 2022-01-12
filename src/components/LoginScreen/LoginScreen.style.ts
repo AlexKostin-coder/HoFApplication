@@ -34,6 +34,7 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     marginLeft: 5,
     height: 40,
+    color: 'grey'
   },
   errorMsg: {
     fontSize: 12,

@@ -1,5 +1,6 @@
 import {
   Button,
+  ChevronRightIcon,
   Divider,
   FormControl,
   Input,
@@ -22,6 +23,7 @@ import {
 
 import Header from '../widgets/Header/Header';
 import { createHouse } from '../../core/houses/houses.actions';
+import { declOfNum } from '../../core/tools/declOfNum';
 import { housesSelector } from '../../core/houses/houses.selectors';
 import { styles } from './HousesScreen.style';
 
@@ -62,7 +64,7 @@ const HousesScreen: FC = props => {
   return (
     <View style={styles.container}>
       <Header
-        title="Будинки"
+        title="Керування будинками"
       />
       <FlatList
         data={housesData}
@@ -77,7 +79,10 @@ const HousesScreen: FC = props => {
             <>
               <TouchableOpacity style={styles.house_item}>
                 <Text style={styles.house_item_title}>{name}</Text>
-                <Text style={styles.house_info}>{count_rooms} кімнат \ {0} пристроїв</Text>
+                <View style={styles.wrapper_house_info}>
+                  <Text style={styles.house_info}>{count_rooms} {declOfNum(count_rooms, ['кімната', 'кімнати', 'кімнат'])} \ {0} {declOfNum(0, ['пристрій', 'пристрої', 'пристроїв'])}</Text>
+                  <ChevronRightIcon size="5" />
+                </View>
               </TouchableOpacity>
               <Divider />
             </>

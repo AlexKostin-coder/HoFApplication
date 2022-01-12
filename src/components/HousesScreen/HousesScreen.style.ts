@@ -8,11 +8,11 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10
+    padding: 12
   },
   house_item_title: {
     fontSize: 16,
-    color: 'grey'
+    color: 'black'
   },
   house_info: {
     color: 'grey'
@@ -26,5 +26,9 @@ export const styles = StyleSheet.create({
   add_house_item_title: {
     color: 'green',
     fontSize: 18,
+  },
+  wrapper_house_info: {
+    flexDirection: 'row', 
+    alignItems: 'center'
   }
 });
