@@ -1,6 +1,7 @@
 import {
   DEVICES_SCREEN,
   HANDLE_ROOM_SCREEN,
+  HOUSES_SCREEN,
   MAIN_TAB,
   PROFILE_SCREEN,
   ROOM_SCREEN,
@@ -9,6 +10,7 @@ import React, { FC } from 'react';
 
 import DevicesScreen from '../DevicesScreen/DevicesScreen';
 import HandleRoomScreen from '../RoomScreen/HandleRoomScreen';
+import HousesScreen from '../HousesScreen/HousesScreen';
 import MainTab from './MainTab';
 import ProfileScreen from '../ProfileScreen/ProfileScreen';
 import RoomScreen from '../RoomScreen/RoomScreen';
@@ -27,8 +29,9 @@ export type MainStackParamList = {
   HandleRoom: {
     roomId: String,
     type: 'edit' | 'add',
-  }
-  Profile: {}
+  },
+  Profile: {},
+  Houses: {},
 };
 
 const Stack = createNativeStackNavigator<MainStackParamList>();
@@ -43,6 +46,7 @@ const MainStack: FC = () => {
       <Stack.Screen name={ROOM_SCREEN} component={RoomScreen} />
       <Stack.Screen name={HANDLE_ROOM_SCREEN} component={HandleRoomScreen} />
       <Stack.Screen name={PROFILE_SCREEN} component={ProfileScreen} />
+      <Stack.Screen name={HOUSES_SCREEN} component={HousesScreen} />
     </Stack.Navigator>
   )
 };

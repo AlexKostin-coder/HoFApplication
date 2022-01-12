@@ -1,4 +1,5 @@
 import {
+  CREATE_HOUSE,
   GET_HOUSES,
   SET_CURRENT_HOUSE_ID,
   defaultCurrentHouseId,
@@ -14,6 +15,11 @@ export const houses = (state: MainState['houses'] = defaultHouses, action: Actio
         ...state,
         ...action.payload.houses,
       }
+    case CREATE_HOUSE:
+      return {
+        ...state,
+        [action.payload._id]: action.payload
+      }
     case LOG_OUT:
       return defaultHouses;
     default:
@@ -21,7 +27,7 @@ export const houses = (state: MainState['houses'] = defaultHouses, action: Actio
   }
 }
 
-export const currentHouseId = (state: MainState['current_house_id'] = defaultCurrentHouseId, action: Action) => {
+export const currentHouseId = (state: MainState['currentHouseId'] = defaultCurrentHouseId, action: Action) => {
   switch (action.type) {
     case SET_CURRENT_HOUSE_ID:
       return {

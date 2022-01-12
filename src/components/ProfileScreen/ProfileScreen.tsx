@@ -65,7 +65,6 @@ const ProfileScreen: FC<ProfileScreenProps> = props => {
     <View style={styles.container}>
       <Header
         title={''}
-        onBack={() => navigation.goBack()}
       />
       <View style={styles.profile_tile}>
         <TouchableOpacity

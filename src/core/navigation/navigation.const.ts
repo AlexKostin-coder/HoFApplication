@@ -7,3 +7,4 @@ export const PROFILE_SCREEN = 'Profile';
 export const LINK_DEVICES_SCREEN = 'LinkDevices';
 export const NOTIFICATIONS_SCREEN = 'Notifications';
 export const MAIN_TAB = 'MainTab';
+export const HOUSES_SCREEN = 'Houses';

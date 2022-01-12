@@ -7,11 +7,11 @@ import {
 
 import ArrowLeft from '../../../assets/icons/arrow-left.svg';
 import { styles } from './Header.style';
+import { useNavigation } from '@react-navigation/native';
 
 interface Header {
   title: String,
   subtitle?: String,
-  onBack: () => void,
   onHandle?: () => void
   iconHandle?: ReactElement
 }
@@ -21,17 +21,18 @@ const Header: FC<Header> = props => {
   const {
     title,
     subtitle,
-    onBack,
     onHandle,
     iconHandle
   } = props;
+
+  const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
       <View style={styles.back_btn_wrapper}>
         <TouchableOpacity
           style={styles.back_btn}
-          onPress={() => onBack()}
+          onPress={() => navigation.goBack()}
         >
           <ArrowLeft
             width={18}

@@ -6,6 +6,7 @@ import {
 
 export const GET_HOUSES = 'GET_HOUSES';
 export const SET_CURRENT_HOUSE_ID = 'SET_CURRENT_HOUSE_ID';
+export const CREATE_HOUSE = 'CREATE_HOUSE';
 
 export const defaultCurrentHouseId: CurrentHouseId = {
   _id: ""
@@ -15,9 +16,8 @@ export const defaultHouse: House = {
   _id: '',
   name: '',
   owner_id: "",
-  rooms_id: [],
-  devices_id: [],
-  members: [],
+  count_rooms: 0,
+  count_devices: 0,
 }
 
 export const defaultHouses: Houses = {

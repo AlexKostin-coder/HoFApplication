@@ -44,6 +44,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Trash from '../../assets/icons/trash.svg';
 import { currentHouseIdSelector } from '../../core/houses/houses.selectors';
 import { getCurrentUrl } from '../../core/tools/getCurrentUrl';
+import { getHouses } from '../../core/houses/houses.actions';
 import { requestCameraPermission } from '../../handlers/PermissionAndroid';
 import { roomsSelector } from '../../core/rooms/rooms.selectors';
 import { styles } from './HandleRoomScreen.style';
@@ -102,6 +103,7 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
     try {
       if (type === 'edit') {
         await dispatch(editRoom({ roomId, name: roomName }));
+        await dispatch(getHouses());
         if (imageData.uri) {
           await dispatch(uploadImageRoom({ ...imageData, roomId }));
         }
@@ -117,9 +119,11 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
             if (imageData.uri) {
               const res = await dispatch(uploadImageRoom({ ...imageData, roomId: newRoomId }));
               if (res.type === UPLOAD_IMAGE_ROOM) {
+                await dispatch(getHouses());
                 return navigation.goBack();
               }
             }
+            await dispatch(getHouses());
             navigation.goBack();
           }
         }
@@ -151,6 +155,7 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
     try {
       await dispatch(deleteRoom(currentHouseId, roomId));
       await dispatch(getRooms(currentHouseId));
+      await dispatch(getHouses());
       navigation.navigate(MAIN_TAB, {});
     } catch (e) {
       console.log({ e });
@@ -214,7 +219,6 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
               : name
             : ""
         }
-        onBack={() => navigation.goBack()}
         {...type === 'edit' ? editProps : {}}
       />
       <View style={styles.content}>

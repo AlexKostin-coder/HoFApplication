@@ -89,7 +89,6 @@ const RoomScreen: FC<RoomScreenProps> = props => {
     <View style={styles.container}>
       <Header
         title={name}
-        onBack={() => navigation.goBack()}
         onHandle={() => navigation.navigate(HANDLE_ROOM_SCREEN, { roomId: _id, type: 'edit' })}
         iconHandle={
           <Settings

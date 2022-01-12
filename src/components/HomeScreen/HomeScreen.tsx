@@ -1,10 +1,14 @@
 import {
+  Actionsheet,
   CheckIcon,
-  Select
+  ChevronDownIcon,
+  Divider,
+  useDisclose
 } from 'native-base';
 import {
   DEVICES_SCREEN,
   HANDLE_ROOM_SCREEN,
+  HOUSES_SCREEN,
   PROFILE_SCREEN,
   ROOM_SCREEN
 } from '../../core/navigation/navigation.const';
@@ -93,7 +97,7 @@ const HomeScreen: FC<HomeScreenProps> = props => {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [currentHouseId]);
 
   const getDataForHouse = async (house_id: string) => {
     setIsLoading(true);
@@ -103,8 +107,11 @@ const HomeScreen: FC<HomeScreenProps> = props => {
     setIsLoading(false);
   }
 
+  const { isOpen, onOpen, onClose } = useDisclose();
+
   const selectCurrentHouseId = (house_id: string) => {
     dispatch(setCurrentHouse(house_id));
+    onClose();
     getDataForHouse(house_id);
   }
 
@@ -135,44 +142,49 @@ const HomeScreen: FC<HomeScreenProps> = props => {
       })
     : [];
 
+  const housesData = Object.keys(houses).length
+    ? Object.keys(houses)
+      .filter((house_id) => house_id !== "")
+      .map((house_id) => ({ ...houses[house_id] }))
+    : [];
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View>
           <Text style={styles.name}>Привіт, {name}</Text>
-          <Select
-            selectedValue={currentHouseId}
-            p="0"
-            height={4}
-            fontSize={14}
-            color={'grey'}
-            variant="unstyled"
-            accessibilityLabel="Оберіть будинок"
-            placeholder="Оберіть будинок"
-            _selectedItem={{
-              endIcon: <CheckIcon size="5" />,
-            }}
-            mt={1}
-            onValueChange={selectCurrentHouseId}
-          >
-            {
-              Object.keys(houses).length
-                ? Object.keys(houses).map((house_id) => {
+          <TouchableOpacity style={styles.wrapper_home_name} onPress={onOpen}>
+            <Text style={styles.welcome_title}>{houses[currentHouseId]?.name || ""}</Text>
+            <ChevronDownIcon size="5" />
+          </TouchableOpacity>
+          <Actionsheet isOpen={isOpen} onClose={onClose}>
+            <Actionsheet.Content>
+              {
+                housesData.map((house) => {
                   const {
                     name,
                     _id,
-                  } = houses[house_id];
+                  } = house;
                   return (
-                    <Select.Item
+                    <Actionsheet.Item
                       key={_id}
-                      label={name}
-                      value={_id}
-                    />
+                      endIcon={<CheckIcon size={currentHouseId === _id ? "5" : "0"} />}
+                      onPress={() => selectCurrentHouseId(_id)}
+                    >
+                      {name}
+                    </Actionsheet.Item>
                   )
                 })
-                : null
-            }
-          </Select>
+              }
+              <Divider />
+              <Actionsheet.Item
+                justifyContent={"center"}
+                onPress={() => { onClose(); navigation.navigate(HOUSES_SCREEN); }}
+              >
+                Керування будинками
+              </Actionsheet.Item>
+            </Actionsheet.Content>
+          </Actionsheet>
         </View>
         <TouchableOpacity onPress={() => navigation.navigate(PROFILE_SCREEN, {})}>
           <Avatar

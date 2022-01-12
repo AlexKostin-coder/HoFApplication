@@ -1,4 +1,5 @@
 import {
+  CREATE_HOUSE,
   GET_HOUSES,
   SET_CURRENT_HOUSE_ID
 } from "./houses.const";
@@ -20,6 +21,30 @@ export const getHouses = () => async (
     return dispatch({
       type: GET_HOUSES,
       payload: houses
+    });
+
+  } catch (e: any) {
+    return dispatch(
+      setMessages({
+        type: 'warning',
+        text: e.message,
+      }),
+    );
+  }
+}
+
+export const createHouse = (name: string) => async (
+  dispatch: Dispatch,
+  getState: GetStateType,
+  api: API
+) => {
+  try {
+
+    const res = await api('POST', 'houses', { name });
+
+    return dispatch({
+      type: CREATE_HOUSE,
+      payload: res.data
     });
 
   } catch (e: any) {

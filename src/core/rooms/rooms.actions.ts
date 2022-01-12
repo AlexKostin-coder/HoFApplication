@@ -7,6 +7,7 @@ import {
 } from "./rooms.const";
 
 import { GET_DEVICES } from './../devices/devices.const';
+import { GET_HOUSES } from "../houses/houses.const";
 import { normalizeDate } from "../tools/normalizeData";
 import { setMessages } from "../ui/ui.actions";
 

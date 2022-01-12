@@ -63,7 +63,6 @@ const DevicesScreen: FC<DevicesScreenProps> = props => {
     <View style={styles.container}>
       <Header
         title={title}
-        onBack={() => navigation.goBack()}
       />
       <View style={styles.content}>
         <FlatList

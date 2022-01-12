@@ -15,8 +15,8 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   welcome_title: {
-    fontSize: 14,
-    color: '#333333'
+    fontSize: 16,
+    color: 'grey'
   },
   name: {
     fontSize: 24,
@@ -121,5 +121,9 @@ export const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: 'center'
+  },
+  wrapper_home_name: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   }
 });
