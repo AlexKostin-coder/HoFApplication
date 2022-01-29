@@ -28,7 +28,7 @@ export const getUser = () => async (
   }
 };
 
-export const editUser = (data: { userId: String, name: String }) => async (
+export const editUser = (data: { name: String }) => async (
   dispatch: Dispatch,
   getState: GetStateType,
   api: API

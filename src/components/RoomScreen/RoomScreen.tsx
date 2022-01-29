@@ -65,25 +65,26 @@ const RoomScreen: FC<RoomScreenProps> = props => {
   const [isLoading, setIsLoading] = useState(false);
 
   const {
-    id_Sensor,
-    name,
     _id,
+    name,
+    house_id,
+    image_id,
   } = rooms[String(roomId)] || {};
 
-  const devicesRoom = id_Sensor?.length &&
-    Object.keys(devices).length
-    ? id_Sensor.map((id_Sensor) => devices[id_Sensor] || {})
-    : [];
+  // const devicesRoom = id_Sensor?.length &&
+  //   Object.keys(devices).length
+  //   ? id_Sensor.map((id_Sensor) => devices[id_Sensor] || {})
+  //   : [];
 
   const getDataRoom = async () => {
     setIsLoading(true);
-    await dispatch(getDevicesRoom(roomId));
+    // await dispatch(getDevicesRoom(roomId));
     setIsLoading(false);
   }
 
-  useEffect(() => {
-    getDataRoom();
-  }, []);
+  // useEffect(() => {
+  //   getDataRoom();
+  // }, []);
 
   return (
     <View style={styles.container}>
@@ -100,7 +101,7 @@ const RoomScreen: FC<RoomScreenProps> = props => {
       />
       <View style={styles.content}>
         <View style={styles.categories}>
-          <FlatList
+          {/* <FlatList
             data={catagoriesDevice}
             horizontal={true}
             keyExtractor={(item, index) => `${item.id}-${index}`}
@@ -117,10 +118,10 @@ const RoomScreen: FC<RoomScreenProps> = props => {
                 <Text style={styles.category_title}>{item.name}</Text>
               </View>
             )}
-          />
+          /> */}
         </View>
         <View style={styles.devices}>
-          <FlatList
+          {/* <FlatList
             data={devicesRoom}
             numColumns={2}
             keyExtractor={(item, index) => `${item._id}-${index}-${roomId}`}
@@ -136,7 +137,7 @@ const RoomScreen: FC<RoomScreenProps> = props => {
                 onRefresh={async () => await getDataRoom()}
               />
             }
-          />
+          /> */}
         </View>
       </View>
     </View>

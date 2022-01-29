@@ -5,9 +5,8 @@ export type Houses = {
 export type House = {
   name: string,
   _id: string,
-  owner_id: string,
-  count_rooms: number,
-  count_devices: number,
+  user_id: string,
+  rooms_id: Array<String>,
 }
 
 export type CurrentHouseId = {

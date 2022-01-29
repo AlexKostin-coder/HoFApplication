@@ -86,6 +86,7 @@ const HousesScreen: FC = props => {
         : editHouse(currentHouseEdit.house_id, nameHouse);
 
       await dispatch(action);
+      await getData();
 
       setNameHouse("");
       setModal((prev) => ({
@@ -166,8 +167,13 @@ const HousesScreen: FC = props => {
           const {
             _id,
             name,
-            count_rooms,
+            rooms_id,
           } = item;
+
+          const count_rooms = rooms_id && rooms_id.length
+            ? rooms_id.length
+            : 0;
+
           return (
             <>
               <View style={styles.house_item}>

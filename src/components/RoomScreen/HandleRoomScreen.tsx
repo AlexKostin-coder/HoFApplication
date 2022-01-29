@@ -25,7 +25,7 @@ import {
   createRoom,
   deleteRoom,
   editRoom,
-  getRooms,
+  getRoomsByHouseId,
   uploadImageRoom,
 } from '../../core/rooms/rooms.actions';
 import {
@@ -154,7 +154,7 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
   const handleDeleteRoom = async () => {
     try {
       await dispatch(deleteRoom(currentHouseId, roomId));
-      await dispatch(getRooms(currentHouseId));
+      await dispatch(getRoomsByHouseId(currentHouseId));
       await dispatch(getHouses());
       navigation.navigate(MAIN_TAB, {});
     } catch (e) {

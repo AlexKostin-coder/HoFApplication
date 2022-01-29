@@ -22,11 +22,6 @@ export const houses = (state: MainState['houses'] = defaultHouses, action: Actio
         ...state,
         [action.payload._id]: action.payload
       }
-    case EDIT_HOUSE:
-      return {
-        ...state,
-        [action.payload.house._id]: action.payload.house
-      }
     case DELETE_HOUSE:
       return {
         ...Object.keys(state)

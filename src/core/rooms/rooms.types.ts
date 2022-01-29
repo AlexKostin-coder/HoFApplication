@@ -3,7 +3,6 @@ export interface Room {
   name: string,
   house_id: string,
   image_id: string,
-  count_devices: number
 };
 
 export interface Rooms {

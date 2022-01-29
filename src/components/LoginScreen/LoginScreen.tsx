@@ -7,14 +7,30 @@ import {
   View
 } from 'react-native';
 import React, { FC, useEffect, useState } from 'react';
-import { validEmail, validPassword } from '../../core/tools/validationData';
+import {
+  validEmail,
+  validPassword
+} from '../../core/tools/validationData';
 
+import { MainStackParamList } from '../Navigation/LoginStack';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { REGISTRATION_SCREEN } from '../../core/navigation/navigation.const';
 import { getAuth } from '../../core/auth/auth.actions';
 import md5 from 'md5';
 import { styles } from './LoginScreen.style';
 import { useDispatch } from 'react-redux';
 
-const LoginScreen: FC = () => {
+type Props = NativeStackScreenProps<MainStackParamList, 'Login'>;
+
+interface LoginScreenProps {
+  navigation: Props['navigation'],
+}
+
+const LoginScreen: FC<LoginScreenProps> = (props) => {
+
+  const {
+    navigation
+  } = props;
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -106,12 +122,16 @@ const LoginScreen: FC = () => {
             onPress={authHandle}
             style={[styles.loginBtn, { marginRight: 15 }]}
           >
-            {isLoading
-              ? (<ActivityIndicator color="white" size="small" />)
-              : (<Text style={[styles.textBtn, { color: 'white' }]}>Увійти</Text>)
+            {
+              isLoading
+                ? (<ActivityIndicator color="white" size="small" />)
+                : (<Text style={[styles.textBtn, { color: 'white' }]}>Увійти</Text>)
             }
           </TouchableOpacity>
-          <TouchableOpacity style={styles.signInBtn}>
+          <TouchableOpacity
+            style={styles.signInBtn}
+            onPress={() => { navigation.navigate(REGISTRATION_SCREEN, {}); }}
+          >
             <Text style={[styles.textBtn, { color: '#4B0082' }]}>Зареєструватися</Text>
           </TouchableOpacity>
         </View>
