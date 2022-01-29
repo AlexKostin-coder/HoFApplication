@@ -47,6 +47,7 @@ import Avatar from '../widgets/Avatar/Avatar';
 import { authUserSelector } from '../../core/users/users.selectors';
 import { declOfNum } from '../../core/tools/declOfNum';
 import { getCurrentUrl } from '../../core/tools/getCurrentUrl';
+import { getDevicesByParam } from '../../core/devices/devices.actions';
 import { getRoomsByHouseId } from '../../core/rooms/rooms.actions';
 import { getUser } from '../../core/users/users.actions';
 import { roomsSelector } from '../../core/rooms/rooms.selectors';
@@ -88,10 +89,15 @@ const HomeScreen: FC<HomeScreenProps> = props => {
 
   const getData = async () => {
     setIsLoading(true);
-    await dispatch(getUser());
-    await dispatch(getHouses());
-    if (currentHouseId) {
-      await dispatch(getRoomsByHouseId(currentHouseId));
+    try {
+      await dispatch(getUser());
+      await dispatch(getHouses());
+      if (currentHouseId) {
+        await dispatch(getRoomsByHouseId(currentHouseId));
+        await dispatch(getDevicesByParam({ house_id: currentHouseId }));
+      }
+    } catch (e) {
+      console.log({ e });
     }
     setIsLoading(false);
   }

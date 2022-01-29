@@ -1,4 +1,5 @@
 import * as Auth from '../core/auth/actions.reducer';
+import * as CategotyDevices from '../core/categorydevices/categorydevices.reducers';
 import * as Devices from '../core/devices/devices.reducers';
 import * as Houses from '../core/houses/houses.reducers';
 import * as Rooms from '../core/rooms/rooms.reducers';
@@ -14,4 +15,5 @@ export default combineReducers({
     ...Devices,
     ...Rooms,
     ...Houses,
+    ...CategotyDevices,
 });

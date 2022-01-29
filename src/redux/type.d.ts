@@ -19,7 +19,8 @@ declare global {
 		devices: Devices,
 		rooms: Rooms,
 		houses: Houses
-		currentHouseId: CurrentHouseId
+		currentHouseId: CurrentHouseId,
+		categoryDevices: {}
 	};
 
 	type MainStorge = Store<MainState, AnyAction>;

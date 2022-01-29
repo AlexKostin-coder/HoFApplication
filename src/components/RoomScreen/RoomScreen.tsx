@@ -22,7 +22,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Settings from '../../assets/icons/settings.svg';
 import TempHumSensor from '../widgets/TempHumSensor/TempHumSensor';
 import Temperature from '../../assets/icons/temperature.svg';
-import { getDevicesRoom } from '../../core/rooms/rooms.actions';
+import { getDevicesByParam } from '../../core/devices/devices.actions';
 import { roomsSelector } from '../../core/rooms/rooms.selectors';
 import { styles } from './RoomScreen.style';
 import { tempHumSensorsSelector } from '../../core/devices/devices.selectors';
@@ -78,13 +78,13 @@ const RoomScreen: FC<RoomScreenProps> = props => {
 
   const getDataRoom = async () => {
     setIsLoading(true);
-    // await dispatch(getDevicesRoom(roomId));
+    await dispatch(getDevicesByParam({ room_id: _id }));
     setIsLoading(false);
   }
 
-  // useEffect(() => {
-  //   getDataRoom();
-  // }, []);
+  useEffect(() => {
+    getDataRoom();
+  }, []);
 
   return (
     <View style={styles.container}>

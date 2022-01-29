@@ -6,7 +6,6 @@ import {
   UPLOAD_IMAGE_ROOM,
 } from "./rooms.const";
 
-import { GET_DEVICES } from './../devices/devices.const';
 import { normalizeDate } from "../tools/normalizeData";
 import { setMessages } from "../ui/ui.actions";
 
@@ -50,31 +49,6 @@ export const getRooms = () => async (
       type: GET_ROOMS,
       payload: rooms
     });
-  } catch (e: any) {
-    return dispatch(
-      setMessages({
-        type: 'warning',
-        text: e.message,
-      })
-    );
-  }
-};
-
-export const getDevicesRoom = (id_room: String) => async (
-  dispatch: Dispatch,
-  getState: GetStateType,
-  api: API
-) => {
-  try {
-    const res = await api('POST', 'sensors/user/rooms/sensor', { id_room });
-
-    const devices = normalizeDate(res.data, 'tempHumSensors', 'id_Sensor');
-
-    return dispatch({
-      type: GET_DEVICES,
-      payload: devices
-    });
-
   } catch (e: any) {
     return dispatch(
       setMessages({

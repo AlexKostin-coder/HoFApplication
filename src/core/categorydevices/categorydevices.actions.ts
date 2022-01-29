@@ -1,22 +1,20 @@
-import { GET_DEVICES } from "./devices.const";
-import { getDevicesData } from "./devices.types";
 import { normalizeDate } from "../tools/normalizeData";
 import { setMessages } from "../ui/ui.actions";
 
-export const getDevicesByParam = (data: getDevicesData) => async (
+export const getCategory = () => async (
   dispatch: Dispatch,
   getState: GetStateType,
   api: API
 ) => {
   try {
 
-    const res = await api('POST', 'getDevicesByParam', data);
+    const res = await api('GET', 'category');
 
-    const { devices } = normalizeDate(res.data.devices, 'devices');
+    console.log(res.data);
 
     return dispatch({
-      type: GET_DEVICES,
-      payload: { devices }
+      type: 'VOID',
+      payload: {}
     });
 
   } catch (e: any) {
