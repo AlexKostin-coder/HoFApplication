@@ -1,5 +1,7 @@
 import {
   CREATE_HOUSE,
+  DELETE_HOUSE,
+  EDIT_HOUSE,
   GET_HOUSES,
   SET_CURRENT_HOUSE_ID,
   defaultCurrentHouseId,
@@ -19,6 +21,20 @@ export const houses = (state: MainState['houses'] = defaultHouses, action: Actio
       return {
         ...state,
         [action.payload._id]: action.payload
+      }
+    case EDIT_HOUSE:
+      return {
+        ...state,
+        [action.payload.house._id]: action.payload.house
+      }
+    case DELETE_HOUSE:
+      return {
+        ...Object.keys(state)
+          .filter((house_id: String) => house_id !== action.payload.house_id)
+          .reduce((acc: MainState['houses'], house_id: String) => {
+            acc[String(house_id)] = state[String(house_id)];
+            return acc;
+          }, {})
       }
     case LOG_OUT:
       return defaultHouses;

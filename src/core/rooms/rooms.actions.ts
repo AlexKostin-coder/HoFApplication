@@ -7,11 +7,10 @@ import {
 } from "./rooms.const";
 
 import { GET_DEVICES } from './../devices/devices.const';
-import { GET_HOUSES } from "../houses/houses.const";
 import { normalizeDate } from "../tools/normalizeData";
 import { setMessages } from "../ui/ui.actions";
 
-export const getRooms = (houseId: String) => async (
+export const getRoomsByHouseId = (houseId: String) => async (
   dispatch: Dispatch,
   getState: GetStateType,
   api: API
@@ -19,6 +18,31 @@ export const getRooms = (houseId: String) => async (
   try {
 
     const res = await api('POST', 'getRoomsByHouseId', { houseId });
+
+    const rooms = normalizeDate(res.data, 'rooms', '_id');
+
+    return dispatch({
+      type: GET_ROOMS,
+      payload: rooms
+    });
+  } catch (e: any) {
+    return dispatch(
+      setMessages({
+        type: 'warning',
+        text: e.message,
+      })
+    );
+  }
+};
+
+export const getRooms = () => async (
+  dispatch: Dispatch,
+  getState: GetStateType,
+  api: API
+) => {
+  try {
+
+    const res = await api('GET', 'rooms');
 
     const rooms = normalizeDate(res.data, 'rooms', '_id');
 

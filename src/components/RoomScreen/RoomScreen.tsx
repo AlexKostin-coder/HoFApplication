@@ -129,6 +129,7 @@ const RoomScreen: FC<RoomScreenProps> = props => {
                 {...item}
               />
             )}
+
             refreshControl={
               <RefreshControl
                 refreshing={isLoading}

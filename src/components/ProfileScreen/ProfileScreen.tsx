@@ -1,5 +1,6 @@
 import {
   Alert,
+  ScrollView,
   Text,
   TouchableOpacity,
   View
@@ -11,12 +12,15 @@ import {
 } from 'react-redux';
 
 import Avatar from '../widgets/Avatar/Avatar';
-import EditIcon from '../../assets/icons/edit.svg';
+import { HOUSES_SCREEN } from '../../core/navigation/navigation.const';
 import Header from '../widgets/Header/Header';
 import LogOutIcon from '../../assets/icons/logout.svg';
 import { MainStackParamList } from '../Navigation/MainStack';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import SettingsIcon from '../../assets/icons/settings.svg';
+import SmartHomeIcon from '../../assets/icons/smart-home.svg';
+import SupportIcon from '../../assets/icons/support.svg';
+import UserIcon from '../../assets/icons/user.svg';
 import { authUserSelector } from '../../core/users/users.selectors';
 import { logOut } from '../../core/auth/auth.actions';
 import { styles } from './ProfileScreen.style';
@@ -67,15 +71,6 @@ const ProfileScreen: FC<ProfileScreenProps> = props => {
         title={''}
       />
       <View style={styles.profile_tile}>
-        <TouchableOpacity
-          style={styles.edit_icon_wrapper}
-        >
-          <EditIcon
-            width={18}
-            height={18}
-            fill={'grey'}
-          />
-        </TouchableOpacity>
         <Avatar
           photoId={photo}
           alt={name[0]?.toUpperCase() || ""}
@@ -86,33 +81,58 @@ const ProfileScreen: FC<ProfileScreenProps> = props => {
         <Text style={styles.name}>{name}</Text>
         <Text style={styles.email}>{email}</Text>
       </View>
-      <View style={styles.btns_group}>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          style={styles.btn}>
-          <View style={styles.btn_item}>
+      <ScrollView style={styles.settings_container}>
+        <View style={styles.settings_view}>
+          <TouchableOpacity
+            style={styles.settings_wrapper}
+            onPress={() => navigation.navigate(HOUSES_SCREEN, {})}
+          >
+            <SmartHomeIcon
+              width={24}
+              height={24}
+              fill={'grey'}
+            />
+            <Text style={styles.settings_title}>Керування будинками</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.settings_wrapper}>
+            <UserIcon
+              width={24}
+              height={24}
+              fill={'grey'}
+            />
+            <Text style={styles.settings_title}>Налаштування профілю</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.settings_wrapper}>
             <SettingsIcon
-              width={18}
-              height={18}
+              width={24}
+              height={24}
               fill={'grey'}
             />
-          </View>
-          <Text style={styles.btn_title}>Налаштування</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={confirmLogout}
-          activeOpacity={0.8}
-          style={styles.btn}>
-          <View style={styles.btn_item}>
+            <Text style={styles.settings_title}>Налаштування</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.settings_wrapper}
+          >
+            <SupportIcon
+              width={28}
+              height={28}
+              fill={'grey'}
+            />
+            <Text style={styles.settings_title}>Підтримка</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.settings_wrapper}
+            onPress={confirmLogout}
+          >
             <LogOutIcon
-              width={18}
-              height={18}
-              fill={'grey'}
+              width={24}
+              height={24}
+              fill={'#C52233'}
             />
-          </View>
-          <Text style={styles.btn_title}>Вийти</Text>
-        </TouchableOpacity>
-      </View>
+            <Text style={[styles.settings_title, { color: '#C52233' }]}>Вийти</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </View>
   )
 }

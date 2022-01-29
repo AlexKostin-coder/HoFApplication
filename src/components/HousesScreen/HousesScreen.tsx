@@ -1,4 +1,12 @@
 import {
+  Alert,
+  FlatList,
+  RefreshControl,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import {
   Button,
   ChevronRightIcon,
   Divider,
@@ -6,39 +14,65 @@ import {
   Input,
   Modal
 } from 'native-base';
-import {
-  FlatList,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
 import React, {
   FC,
   useState
 } from 'react';
 import {
+  createHouse,
+  deleteHouse,
+  editHouse,
+  getHouses,
+  setCurrentHouse,
+} from '../../core/houses/houses.actions';
+import {
+  currentHouseIdSelector,
+  housesSelector,
+} from '../../core/houses/houses.selectors';
+import {
   useDispatch,
   useSelector,
 } from 'react-redux';
 
+import DeleteIcon from '../../assets/icons/trash.svg';
+import EditIcon from '../../assets/icons/edit.svg';
 import Header from '../widgets/Header/Header';
-import { createHouse } from '../../core/houses/houses.actions';
+import { SwipeListView } from 'react-native-swipe-list-view';
 import { declOfNum } from '../../core/tools/declOfNum';
-import { housesSelector } from '../../core/houses/houses.selectors';
+import { getRooms } from '../../core/rooms/rooms.actions';
 import { styles } from './HousesScreen.style';
 
 const HousesScreen: FC = props => {
 
-  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [modal, setModal] = useState<{ show: boolean, type: "add" | "edit" }>({
+    show: false,
+    type: "add",
+  });
   const [nameHouse, setNameHouse] = useState<string>("");
+  const [currentHouseEdit, setCurrentHouseEdit] = useState<{ name: string, house_id: string }>({
+    name: "",
+    house_id: ""
+  });
   const [showError, setShowError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const dispatch = useDispatch();
 
   const houses = useSelector(housesSelector);
+  const currentHouseId = useSelector(currentHouseIdSelector);
 
-  const addNewHouse = async () => {
+  const getData = async () => {
+    setIsLoading(true);
+    try {
+      await dispatch(getHouses());
+      await dispatch(getRooms());
+    } catch (e) {
+      console.log({ e });
+    }
+    setIsLoading(false);
+  }
+
+  const handleChangeHouse = async () => {
     setIsLoading(true);
     try {
       if (!nameHouse.length) {
@@ -46,13 +80,66 @@ const HousesScreen: FC = props => {
         setShowError(true);
         return false;
       }
-      await dispatch(createHouse(nameHouse));
+
+      const action = modal.type === "add"
+        ? createHouse(nameHouse)
+        : editHouse(currentHouseEdit.house_id, nameHouse);
+
+      await dispatch(action);
+
       setNameHouse("");
-      setOpenModal(false);
+      setModal((prev) => ({
+        show: false,
+        type: prev.type,
+      }));
     } catch (e) {
       console.log({ e });
     }
     setIsLoading(false);
+  };
+
+  const handleEditHouse = (house_id: string, name: string) => {
+    setModal((prev) => ({ show: !prev.show, type: "edit" }));
+    setCurrentHouseEdit({ name, house_id });
+    setNameHouse(name);
+  }
+
+  const removeHouse = async (rowMap: any, rowKey: string) => {
+    setIsLoading(true);
+    const elem = rowMap[rowKey];
+    try {
+      if (elem) {
+        rowMap[rowKey].closeRow();
+        await dispatch(deleteHouse(rowKey));
+        await getData();
+        if (currentHouseId === rowKey) {
+          const house = Object.keys(houses).filter((house, index) => index == 1) || [];
+          if (house.length && house[0]) {
+            dispatch(setCurrentHouse(house[0]));
+          }
+        }
+      }
+    } catch (e) {
+      console.log({ e });
+    }
+    setIsLoading(false);
+  }
+
+  const confirmRemove = (rowMap: any, rowKey: string, name: string) => {
+    Alert.alert(
+      `Ви дійсно хочете видалити будинок ${name}?`,
+      `Будинок буде видалено разом зі всіма кімнатами в ньому!`,
+      [
+        {
+          text: "Відмінити",
+          style: "cancel"
+        },
+        {
+          text: "Так",
+          onPress: async () => await removeHouse(rowMap, rowKey)
+        }
+      ]
+    );
   }
 
   const housesData = Object.keys(houses).length
@@ -66,9 +153,15 @@ const HousesScreen: FC = props => {
       <Header
         title="Керування будинками"
       />
-      <FlatList
+      <SwipeListView
         data={housesData}
         keyExtractor={(item, index) => item._id}
+        refreshControl={
+          <RefreshControl
+            refreshing={isLoading}
+            onRefresh={async () => await getData()}
+          />
+        }
         renderItem={({ item, index }) => {
           const {
             _id,
@@ -77,30 +170,54 @@ const HousesScreen: FC = props => {
           } = item;
           return (
             <>
-              <TouchableOpacity style={styles.house_item}>
+              <View style={styles.house_item}>
                 <Text style={styles.house_item_title}>{name}</Text>
                 <View style={styles.wrapper_house_info}>
                   <Text style={styles.house_info}>{count_rooms} {declOfNum(count_rooms, ['кімната', 'кімнати', 'кімнат'])} \ {0} {declOfNum(0, ['пристрій', 'пристрої', 'пристроїв'])}</Text>
                   <ChevronRightIcon size="5" />
                 </View>
-              </TouchableOpacity>
+              </View>
               <Divider />
             </>
           )
         }}
+        renderHiddenItem={(data, rowMap) => (
+          <View style={[styles.house_item, { backgroundColor: 'grey' }]}>
+            <TouchableOpacity onPress={() => {
+              handleEditHouse(data.item._id, data.item.name);
+              rowMap[data.item._id].closeRow();
+            }}
+            >
+              <EditIcon
+                width={24}
+                height={24}
+                fill={'white'}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => confirmRemove(rowMap, data.item._id, data.item.name)}>
+              <DeleteIcon
+                width={24}
+                height={24}
+                fill={'#C52233'}
+              />
+            </TouchableOpacity>
+          </View>
+        )}
+        leftOpenValue={50}
+        rightOpenValue={-50}
       />
       <TouchableOpacity
         style={styles.add_house_item}
-        onPress={() => setOpenModal((prev) => !prev)}
+        onPress={() => setModal((prev) => ({ show: !prev.show, type: "add" }))}
       >
         <Text style={styles.add_house_item_title}>Додати будинок</Text>
       </TouchableOpacity>
-      <Modal size={"full"} isOpen={openModal} onClose={() => setOpenModal(false)}>
+      <Modal size={"full"} isOpen={modal.show} onClose={() => setModal({ show: false, type: "add", })}>
         <Modal.Content
           marginBottom={0}
           marginTop={"auto"}
         >
-          <Modal.Header>Додавання будинку</Modal.Header>
+          <Modal.Header>{`${modal.type === "add" ? 'Створення будинку' : `Редагування будинку ${currentHouseEdit.name}`}`}</Modal.Header>
           <Modal.Body>
             <FormControl
               isInvalid={showError && !nameHouse.length}
@@ -124,7 +241,7 @@ const HousesScreen: FC = props => {
               <Button
                 variant="unstyled"
                 onPress={() => {
-                  setOpenModal(false);
+                  setModal((prev) => ({ show: false, type: prev.type, }));
                   setShowError(false);
                 }}
               >
@@ -134,9 +251,9 @@ const HousesScreen: FC = props => {
                 variant="unstyled"
                 backgroundColor={"green.700"}
                 isLoading={isLoading}
-                onPress={addNewHouse}
+                onPress={handleChangeHouse}
               >
-                Додати
+                {`${modal.type === "add" ? 'Додати' : 'Редагувати'}`}
               </Button>
             </Button.Group>
           </Modal.Footer>

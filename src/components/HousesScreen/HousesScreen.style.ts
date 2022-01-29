@@ -8,7 +8,9 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 12
+    padding: 12,
+    flex: 1,
+    backgroundColor: 'white',
   },
   house_item_title: {
     fontSize: 16,
