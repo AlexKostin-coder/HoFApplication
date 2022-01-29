@@ -4,12 +4,15 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  house_list: {
+    marginTop: 10
+  },
   house_item: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 12,
-    flex: 1,
+    paddingVertical: 20,
+    paddingHorizontal: 10,
     backgroundColor: 'white',
   },
   house_item_title: {
@@ -30,7 +33,7 @@ export const styles = StyleSheet.create({
     fontSize: 18,
   },
   wrapper_house_info: {
-    flexDirection: 'row', 
+    flexDirection: 'row',
     alignItems: 'center'
   }
 });

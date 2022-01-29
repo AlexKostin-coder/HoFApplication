@@ -53,5 +53,6 @@ export const styles = StyleSheet.create({
   settings_title: {
     marginTop: 10,
     textAlign: 'center',
+    color: 'grey'
   },
 });

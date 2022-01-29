@@ -155,6 +155,7 @@ const HousesScreen: FC = props => {
         title="Керування будинками"
       />
       <SwipeListView
+        style={styles.house_list}
         data={housesData}
         keyExtractor={(item, index) => item._id}
         refreshControl={
@@ -188,16 +189,17 @@ const HousesScreen: FC = props => {
           )
         }}
         renderHiddenItem={(data, rowMap) => (
-          <View style={[styles.house_item, { backgroundColor: 'grey' }]}>
-            <TouchableOpacity onPress={() => {
-              handleEditHouse(data.item._id, data.item.name);
-              rowMap[data.item._id].closeRow();
-            }}
+          <View style={styles.house_item}>
+            <TouchableOpacity
+              onPress={() => {
+                handleEditHouse(data.item._id, data.item.name);
+                rowMap[data.item._id].closeRow();
+              }}
             >
               <EditIcon
                 width={24}
                 height={24}
-                fill={'white'}
+                fill={'grey'}
               />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => confirmRemove(rowMap, data.item._id, data.item.name)}>
@@ -209,8 +211,8 @@ const HousesScreen: FC = props => {
             </TouchableOpacity>
           </View>
         )}
-        leftOpenValue={50}
-        rightOpenValue={-50}
+        leftOpenValue={60}
+        rightOpenValue={-60}
       />
       <TouchableOpacity
         style={styles.add_house_item}
