@@ -9,8 +9,8 @@ import {
 import React, { FC, useEffect, useState } from 'react';
 import { validEmail, validPassword } from '../../core/tools/validationData';
 
-import { GET_AUTH } from '../../core/auth/auth.const';
 import { getAuth } from '../../core/auth/auth.actions';
+import md5 from 'md5';
 import { styles } from './LoginScreen.style';
 import { useDispatch } from 'react-redux';
 
@@ -31,7 +31,7 @@ const LoginScreen: FC = () => {
     if (email.length && password.length) {
       try {
         setIsLoading(true);
-        await dispatch(getAuth(email, password));
+        await dispatch(getAuth(email, md5(password)));
         setIsLoading(false);
       } catch (e) {
         setIsLoading(false);
@@ -59,11 +59,14 @@ const LoginScreen: FC = () => {
 
   return (
     <View style={styles.container}>
-      {!showKeyboard ?
-        <View style={styles.wrapperTitle}>
-          <Text style={styles.title}> Вітаємо в HOF!</Text>
-        </View>
-        : null
+      {
+        !showKeyboard
+          ? (
+            <View style={styles.wrapperTitle}>
+              <Text style={styles.title}> Вітаємо в HOF!</Text>
+            </View>
+          )
+          : null
       }
       <View style={[styles.wrapperLoginForm, showKeyboard ? { marginTop: 250, } : {}]}>
         <View style={{ width: '100%' }}>
