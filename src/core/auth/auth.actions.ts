@@ -14,6 +14,15 @@ export const getAuth = (email: string, password: string) => async (
 	try {
 		const res = await api('POST', 'auth', { email, password });
 
+		if (res.data.message) {
+			dispatch(
+				setMessages({
+					type: 'info',
+					text: res.data.message,
+				}),
+			);
+		}
+
 		const authToken: string = res.data.token;
 
 		return dispatch({
@@ -38,6 +47,15 @@ export const registration = (data: { name: string, email: string, password: stri
 ) => {
 	try {
 		const res = await api('POST', 'registration', data);
+
+		if (res.data.message) {
+			dispatch(
+				setMessages({
+					type: 'info',
+					text: res.data.message,
+				}),
+			);
+		}
 
 		return dispatch({
 			type: REGISTRATION,

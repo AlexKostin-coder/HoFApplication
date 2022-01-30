@@ -18,6 +18,15 @@ export const getRoomsByHouseId = (houseId: String) => async (
 
     const res = await api('POST', 'getRoomsByHouseId', { houseId });
 
+    if (res.data.message) {
+			dispatch(
+				setMessages({
+					type: 'info',
+					text: res.data.message,
+				}),
+			);
+		}
+
     const rooms = normalizeDate(res.data, 'rooms', '_id');
 
     return dispatch({
@@ -43,6 +52,15 @@ export const getRooms = () => async (
 
     const res = await api('GET', 'rooms');
 
+    if (res.data.message) {
+			dispatch(
+				setMessages({
+					type: 'info',
+					text: res.data.message,
+				}),
+			);
+		}
+
     const rooms = normalizeDate(res.data, 'rooms', '_id');
 
     return dispatch({
@@ -67,6 +85,15 @@ export const editRoom = (data: { roomId: String, name: String }) => async (
   try {
 
     const res = await api('PATCH', 'rooms', data);
+
+    if (res.data.message) {
+			dispatch(
+				setMessages({
+					type: 'info',
+					text: res.data.message,
+				}),
+			);
+		}
 
     const { room, house } = res.data;
 
@@ -94,6 +121,15 @@ export const createRoom = (data: { houseId: String, name: String }) => async (
 
     const res = await api('POST', 'rooms', data);
 
+    if (res.data.message) {
+			dispatch(
+				setMessages({
+					type: 'info',
+					text: res.data.message,
+				}),
+			);
+		}
+
     return dispatch({
       type: CREATE_ROOM,
       payload: res.data.room
@@ -116,6 +152,15 @@ export const deleteRoom = (houseId: String, roomId: String) => async (
 ) => {
   try {
     const res = await api('DELETE', 'rooms', { houseId, roomId });
+
+    if (res.data.message) {
+			dispatch(
+				setMessages({
+					type: 'info',
+					text: res.data.message,
+				}),
+			);
+		}
 
     return dispatch({
       type: DELETE_ROOM,

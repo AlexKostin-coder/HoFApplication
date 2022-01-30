@@ -22,10 +22,10 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Settings from '../../assets/icons/settings.svg';
 import TempHumSensor from '../widgets/TempHumSensor/TempHumSensor';
 import Temperature from '../../assets/icons/temperature.svg';
+import { categoryDevicesSelector } from '../../core/categoryDevices/categoryDevices.selectors';
 import { getDevicesByParam } from '../../core/devices/devices.actions';
 import { roomsSelector } from '../../core/rooms/rooms.selectors';
 import { styles } from './RoomScreen.style';
-import { tempHumSensorsSelector } from '../../core/devices/devices.selectors';
 
 type Props = NativeStackScreenProps<MainStackParamList, 'Room'>;
 
@@ -33,21 +33,6 @@ interface RoomScreenProps {
   navigation: Props['navigation'],
   route: Props['route']
 }
-
-const catagoriesDevice = [
-  {
-    id: '1',
-    name: 'Температура/Вологість',
-    image_id: 'tempsensor.jpg',
-    type: 'temp/hum'
-  },
-  // {
-  //   id: '12',
-  //   name: 'Температура/Вологість',
-  //   image_id: 'tempsensor.jpg',
-  //   type: 'temp/hum'
-  // },
-];
 
 const RoomScreen: FC<RoomScreenProps> = props => {
   const {
@@ -59,8 +44,8 @@ const RoomScreen: FC<RoomScreenProps> = props => {
     roomId,
   } = route.params;
 
-  const devices = useSelector(tempHumSensorsSelector);
   const rooms = useSelector(roomsSelector);
+  const categoryDevices = useSelector(categoryDevicesSelector);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -71,11 +56,6 @@ const RoomScreen: FC<RoomScreenProps> = props => {
     image_id,
   } = rooms[String(roomId)] || {};
 
-  // const devicesRoom = id_Sensor?.length &&
-  //   Object.keys(devices).length
-  //   ? id_Sensor.map((id_Sensor) => devices[id_Sensor] || {})
-  //   : [];
-
   const getDataRoom = async () => {
     setIsLoading(true);
     await dispatch(getDevicesByParam({ room_id: _id }));
@@ -85,6 +65,12 @@ const RoomScreen: FC<RoomScreenProps> = props => {
   useEffect(() => {
     getDataRoom();
   }, []);
+
+  const categoryDevicesData = Object.keys(categoryDevices).length
+    ? Object.keys(categoryDevices)
+      .filter((category_devices_id) => category_devices_id !== "")
+      .map((category_devices_id) => ({ ...categoryDevices[category_devices_id] }))
+    : [];
 
   return (
     <View style={styles.container}>
@@ -101,10 +87,10 @@ const RoomScreen: FC<RoomScreenProps> = props => {
       />
       <View style={styles.content}>
         <View style={styles.categories}>
-          {/* <FlatList
-            data={catagoriesDevice}
+          <FlatList
+            data={categoryDevicesData}
             horizontal={true}
-            keyExtractor={(item, index) => `${item.id}-${index}`}
+            keyExtractor={(item, index) => item._id}
             renderItem={({ item, index }) => (
               <View style={styles.wrapper_category}>
                 <TouchableOpacity style={styles.category}
@@ -118,7 +104,7 @@ const RoomScreen: FC<RoomScreenProps> = props => {
                 <Text style={styles.category_title}>{item.name}</Text>
               </View>
             )}
-          /> */}
+          />
         </View>
         <View style={styles.devices}>
           {/* <FlatList

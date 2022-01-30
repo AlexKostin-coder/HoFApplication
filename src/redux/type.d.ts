@@ -4,6 +4,7 @@ import { UIState } from './../core/ui/ui.types';
 import { Api } from './../core/api/api.types';
 import { Auth } from './../core/auth/actions.types';
 import { Users } from '../core/users/users.types';
+import { CategorysDevice } from '../core/categoryDevices/categoryDevices.types';
 import {
 	Houses,
 	CurrentHouseId
@@ -20,7 +21,7 @@ declare global {
 		rooms: Rooms,
 		houses: Houses
 		currentHouseId: CurrentHouseId,
-		categoryDevices: {}
+		categoryDevices: CategorysDevice
 	};
 
 	type MainStorge = Store<MainState, AnyAction>;

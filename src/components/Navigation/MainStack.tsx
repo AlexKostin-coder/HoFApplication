@@ -19,8 +19,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 export type MainStackParamList = {
   MainTab: {},
   Devices: {
-    categoryId: String
+    categoryId: String,
     title: String,
+    alias: String,
   },
   Room: {
     roomId: String,

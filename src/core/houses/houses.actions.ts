@@ -18,6 +18,15 @@ export const getHouses = () => async (
 
     const res = await api('GET', 'houses');
 
+    if (res.data.message) {
+			dispatch(
+				setMessages({
+					type: 'info',
+					text: res.data.message,
+				}),
+			);
+		}
+
     const houses = normalizeDate(res.data, 'houses', '_id');
 
     return dispatch({
@@ -44,6 +53,15 @@ export const createHouse = (name: string) => async (
 
     const res = await api('POST', 'houses', { name });
 
+    if (res.data.message) {
+			dispatch(
+				setMessages({
+					type: 'info',
+					text: res.data.message,
+				}),
+			);
+		}
+
     return dispatch({
       type: CREATE_HOUSE,
       payload: res.data
@@ -68,6 +86,15 @@ export const deleteHouse = (house_id: string) => async (
 
     const res = await api('DELETE', 'houses', { house_id });
 
+    if (res.data.message) {
+			dispatch(
+				setMessages({
+					type: 'info',
+					text: res.data.message,
+				}),
+			);
+		}
+
     return dispatch({
       type: DELETE_HOUSE,
       payload: { house_id },
@@ -91,6 +118,15 @@ export const editHouse = (house_id: string, name: string) => async (
   try {
 
     const res = await api('PATCH', 'houses', { house_id, name });
+
+    if (res.data.message) {
+			dispatch(
+				setMessages({
+					type: 'info',
+					text: res.data.message,
+				}),
+			);
+		}
 
     return dispatch({
       type: EDIT_HOUSE,

@@ -1,0 +1,1 @@
+export const categoryDevicesSelector = (state: MainState) => state.categoryDevices;

@@ -11,7 +11,16 @@ export const getUser = () => async (
   api: API
 ) => {
   try {
-    const res = await api('GET', 'users', {});
+    const res = await api('GET', 'users');
+
+    if (res.data.message) {
+      dispatch(
+        setMessages({
+          type: 'info',
+          text: res.data.message,
+        }),
+      );
+    }
 
     return dispatch({
       type: GET_USER,
@@ -36,6 +45,15 @@ export const editUser = (data: { name: String }) => async (
   try {
 
     const res = await api('PATCH', 'users', data);
+
+    if (res.data.message) {
+      dispatch(
+        setMessages({
+          type: 'info',
+          text: res.data.message,
+        }),
+      );
+    }
 
     return dispatch({
       type: EDIT_USER,

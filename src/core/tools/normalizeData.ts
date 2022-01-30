@@ -14,7 +14,10 @@ export const normalizeDate = (
       },
     );
   }
-  return {
-    [name]: { [data[byField]]: data },
-  };
+  if (Object.keys(data).length) {
+    return {
+      [name]: { [data[byField]]: data },
+    };
+  }
+  return {};
 };

@@ -9,8 +9,8 @@ import { authTokenSelector } from "../auth/auth.selectors";
 import axios from "axios";
 
 const DOMAIN = IS_LOCAL
-	? 'http://192.168.0.100:80/api/'
-	: 'http://hofenterprise.com/';
+	? 'http://192.168.0.103:80/api/'
+	: 'http://hofenterprise.com/api/';
 
 export const sendRequest = async (
 	url: string,

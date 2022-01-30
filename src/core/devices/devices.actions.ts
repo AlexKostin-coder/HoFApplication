@@ -12,6 +12,15 @@ export const getDevicesByParam = (data: getDevicesData) => async (
 
     const res = await api('POST', 'getDevicesByParam', data);
 
+    if (res.data.message) {
+      dispatch(
+        setMessages({
+          type: 'info',
+          text: res.data.message,
+        }),
+      );
+    }
+
     const { devices } = normalizeDate(res.data.devices, 'devices');
 
     return dispatch({

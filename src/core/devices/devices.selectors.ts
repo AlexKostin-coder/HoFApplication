@@ -1,1 +1,1 @@
-export const tempHumSensorsSelector = (state: MainState) => state.devices.tempHumSensors;
+export const userDevicesSelector = (state: MainState) => state.devices;

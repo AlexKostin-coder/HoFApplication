@@ -41,6 +41,7 @@ import { SwipeListView } from 'react-native-swipe-list-view';
 import { declOfNum } from '../../core/tools/declOfNum';
 import { getRooms } from '../../core/rooms/rooms.actions';
 import { styles } from './HousesScreen.style';
+import { userDevicesSelector } from '../../core/devices/devices.selectors';
 
 const HousesScreen: FC = props => {
 
@@ -60,6 +61,7 @@ const HousesScreen: FC = props => {
 
   const houses = useSelector(housesSelector);
   const currentHouseId = useSelector(currentHouseIdSelector);
+  const userDevices = useSelector(userDevicesSelector);
 
   const getData = async () => {
     setIsLoading(true);
@@ -175,12 +177,17 @@ const HousesScreen: FC = props => {
             ? rooms_id.length
             : 0;
 
+          const count_devices = userDevices && Object.keys(userDevices).length
+            ? Object.keys(userDevices)
+              .filter((user_devices_id) => userDevices[user_devices_id].house_id === _id).length
+            : 0;
+
           return (
             <>
               <View style={styles.house_item}>
                 <Text style={styles.house_item_title}>{name}</Text>
                 <View style={styles.wrapper_house_info}>
-                  <Text style={styles.house_info}>{count_rooms} {declOfNum(count_rooms, ['кімната', 'кімнати', 'кімнат'])} \ {0} {declOfNum(0, ['пристрій', 'пристрої', 'пристроїв'])}</Text>
+                  <Text style={styles.house_info}>{count_rooms} {declOfNum(count_rooms, ['кімната', 'кімнати', 'кімнат'])} \ {count_devices} {declOfNum(count_devices, ['пристрій', 'пристрої', 'пристроїв'])}</Text>
                   <ChevronRightIcon size="5" />
                 </View>
               </View>

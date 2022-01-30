@@ -45,28 +45,15 @@ import {
 
 import Avatar from '../widgets/Avatar/Avatar';
 import { authUserSelector } from '../../core/users/users.selectors';
+import { categoryDevicesSelector } from '../../core/categoryDevices/categoryDevices.selectors';
 import { declOfNum } from '../../core/tools/declOfNum';
+import { getCategoryDevicesByUserId } from '../../core/categoryDevices/categoryDevices.actions';
 import { getCurrentUrl } from '../../core/tools/getCurrentUrl';
 import { getDevicesByParam } from '../../core/devices/devices.actions';
 import { getRoomsByHouseId } from '../../core/rooms/rooms.actions';
 import { getUser } from '../../core/users/users.actions';
 import { roomsSelector } from '../../core/rooms/rooms.selectors';
 import { styles } from './HomeScreen.style';
-
-const catagoriesDevice = [
-  {
-    id: '1',
-    name: 'Температура/Вологість',
-    image_id: 'tempsensor.jpg',
-    type: 'temp/hum'
-  },
-  // {
-  //   id: '12',
-  //   name: 'Температура/Вологість',
-  //   image_id: 'tempsensor.jpg',
-  //   type: 'temp/hum'
-  // },
-];
 
 interface HomeScreenProps {
   navigation: NavigationProp<ParamListBase>
@@ -84,14 +71,18 @@ const HomeScreen: FC<HomeScreenProps> = props => {
   const rooms = useSelector(roomsSelector);
   const houses = useSelector(housesSelector);
   const currentHouseId = useSelector(currentHouseIdSelector);
+  const categoryDevices = useSelector(categoryDevicesSelector);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const getData = async () => {
     setIsLoading(true);
     try {
-      await dispatch(getUser());
-      await dispatch(getHouses());
+      await Promise.all([
+        dispatch(getUser()),
+        dispatch(getHouses()),
+        dispatch(getCategoryDevicesByUserId()),
+      ])
       if (currentHouseId) {
         await dispatch(getRoomsByHouseId(currentHouseId));
         await dispatch(getDevicesByParam({ house_id: currentHouseId }));
@@ -110,11 +101,16 @@ const HomeScreen: FC<HomeScreenProps> = props => {
     setIsLoading(true);
     if (house_id) {
       await dispatch(getRoomsByHouseId(house_id));
+      await dispatch(getDevicesByParam({ house_id }));
     }
     setIsLoading(false);
   }
 
-  const { isOpen, onOpen, onClose } = useDisclose();
+  const {
+    isOpen,
+    onOpen,
+    onClose
+  } = useDisclose();
 
   const selectCurrentHouseId = (house_id: string) => {
     dispatch(setCurrentHouse(house_id));
@@ -153,6 +149,12 @@ const HomeScreen: FC<HomeScreenProps> = props => {
     ? Object.keys(houses)
       .filter((house_id) => house_id !== "")
       .map((house_id) => ({ ...houses[house_id] }))
+    : [];
+
+  const categoryDevicesData = Object.keys(categoryDevices).length
+    ? Object.keys(categoryDevices)
+      .filter((category_devices_id) => category_devices_id !== "")
+      .map((category_devices_id) => ({ ...categoryDevices[category_devices_id] }))
     : [];
 
   return (
@@ -213,7 +215,6 @@ const HomeScreen: FC<HomeScreenProps> = props => {
               name,
               _id,
               image_id,
-              count_devices,
             } = room;
 
             const addRoom = _id === ""
@@ -245,7 +246,7 @@ const HomeScreen: FC<HomeScreenProps> = props => {
                         style={styles.room_content}
                       >
                         <Text style={[styles.room_name, !image_id ? { color: 'black' } : {}]}>{name}</Text>
-                        <Text style={[styles.room_quantity_device, !image_id ? { color: 'grey' } : {}]}>{count_devices} {declOfNum(0, ['пристрій', 'пристрої', 'пристроїв'])}</Text>
+                        <Text style={[styles.room_quantity_device, !image_id ? { color: 'grey' } : {}]}>{0} {declOfNum(0, ['пристрій', 'пристрої', 'пристроїв'])}</Text>
                       </ImageBackground>
                     )
                 }
@@ -263,17 +264,17 @@ const HomeScreen: FC<HomeScreenProps> = props => {
       <View style={styles.devices}>
         <Text style={styles.devices_title}>Пристрої</Text>
         <FlatList
-          data={catagoriesDevice.concat().reverse()} // TODO тимчасово
+          data={categoryDevicesData}
           style={styles.catagories_device_list}
-          keyExtractor={(item, index) => `${item.id}-${index}`}
+          keyExtractor={(item, index) => item._id}
           numColumns={2}
           renderItem={({ item: catagoryDevice, index }) => {
             const {
-              id: categoryId,
+              _id: categoryId,
               name,
+              alias,
               image_id,
             } = catagoryDevice;
-
             return (
               <TouchableOpacity
                 style={styles.catagories_device}
@@ -281,7 +282,8 @@ const HomeScreen: FC<HomeScreenProps> = props => {
                 onPress={() => {
                   navigation.navigate(DEVICES_SCREEN, {
                     categoryId,
-                    title: name
+                    title: name,
+                    alias,
                   })
                 }}
               >

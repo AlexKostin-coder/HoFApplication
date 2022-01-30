@@ -13,9 +13,7 @@ import Header from '../widgets/Header/Header';
 import { MainStackParamList } from '../Navigation/MainStack';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import TempHumSensor from '../widgets/TempHumSensor/TempHumSensor';
-import { getTemperatureSensors } from '../../core/devices/devices.actions';
 import { styles } from './DevicesScreen.style';
-import { tempHumSensorsSelector } from '../../core/devices/devices.selectors';
 
 type Props = NativeStackScreenProps<MainStackParamList, 'Devices'>;
 
@@ -33,26 +31,15 @@ const DevicesScreen: FC<DevicesScreenProps> = props => {
 
   const {
     categoryId = "",
-    title = ""
+    title = "",
+    alias = "",
   } = route.params;
 
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const dispatch = useDispatch();
 
-  const tempHumSensors = useSelector(tempHumSensorsSelector);
-
-  const devices = Object.keys(tempHumSensors)?.length
-    ? Object.keys(tempHumSensors)
-      .filter((tempHumSensorId) => tempHumSensorId !== "")
-      .map((tempHumSensorId) => {
-        return { ...tempHumSensors[tempHumSensorId] }
-      })
-    : [];
-
   const getDevices = async () => {
-    setIsLoading(true);
-    await dispatch(getTemperatureSensors());
-    setIsLoading(false);
+
   }
 
   useEffect(() => {
@@ -65,7 +52,7 @@ const DevicesScreen: FC<DevicesScreenProps> = props => {
         title={title}
       />
       <View style={styles.content}>
-        <FlatList
+        {/* <FlatList
           data={devices}
           style={styles.device_list}
           numColumns={2}
@@ -81,7 +68,7 @@ const DevicesScreen: FC<DevicesScreenProps> = props => {
               onRefresh={async () => await getDevices()}
             />
           }
-        />
+        /> */}
       </View>
     </View>
   )
