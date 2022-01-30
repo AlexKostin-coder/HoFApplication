@@ -4,8 +4,8 @@ export type Devices = {
 
 export type Device = {
   _id: string,
-  user_id: string,
-  house_id: string,
+  user: string,
+  house: string,
 }
 
 export type getDevicesData = {
@@ -24,4 +24,16 @@ export type TempHumSensorTypes = {
   id_Sensor: string
   StartTime: Array<{}>,
   EndTime: Array<{}>,
+}
+
+export type TempSensor = {
+  _id: string,
+  name: string,
+  temperature: number,
+  custom_id: string,
+  category: string,
+}
+
+export type TempSensors = {
+  [key: string]: TempSensor
 }

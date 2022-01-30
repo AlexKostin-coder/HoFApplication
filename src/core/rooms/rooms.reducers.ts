@@ -16,13 +16,7 @@ export const rooms = (state: MainState['rooms'] = defaultRooms, action: Action) 
         ...state,
         ...action.payload.rooms,
       }
-    case EDIT_ROOM:
-      return {
-        ...state,
-        [action.payload.room._id]: { ...action.payload.room }
-      }
     case CREATE_ROOM:
-    case UPLOAD_IMAGE_ROOM:
       return {
         ...state,
         [action.payload._id]: { ...action.payload }

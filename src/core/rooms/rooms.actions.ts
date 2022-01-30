@@ -19,13 +19,13 @@ export const getRoomsByHouseId = (houseId: String) => async (
     const res = await api('POST', 'getRoomsByHouseId', { houseId });
 
     if (res.data.message) {
-			dispatch(
-				setMessages({
-					type: 'info',
-					text: res.data.message,
-				}),
-			);
-		}
+      dispatch(
+        setMessages({
+          type: 'info',
+          text: res.data.message,
+        }),
+      );
+    }
 
     const rooms = normalizeDate(res.data, 'rooms', '_id');
 
@@ -53,13 +53,13 @@ export const getRooms = () => async (
     const res = await api('GET', 'rooms');
 
     if (res.data.message) {
-			dispatch(
-				setMessages({
-					type: 'info',
-					text: res.data.message,
-				}),
-			);
-		}
+      dispatch(
+        setMessages({
+          type: 'info',
+          text: res.data.message,
+        }),
+      );
+    }
 
     const rooms = normalizeDate(res.data, 'rooms', '_id');
 
@@ -87,19 +87,17 @@ export const editRoom = (data: { roomId: String, name: String }) => async (
     const res = await api('PATCH', 'rooms', data);
 
     if (res.data.message) {
-			dispatch(
-				setMessages({
-					type: 'info',
-					text: res.data.message,
-				}),
-			);
-		}
-
-    const { room, house } = res.data;
+      dispatch(
+        setMessages({
+          type: 'info',
+          text: res.data.message,
+        }),
+      );
+    }
 
     return dispatch({
       type: EDIT_ROOM,
-      payload: { house, room }
+      payload: {}
     });
 
   } catch (e: any) {
@@ -122,13 +120,13 @@ export const createRoom = (data: { houseId: String, name: String }) => async (
     const res = await api('POST', 'rooms', data);
 
     if (res.data.message) {
-			dispatch(
-				setMessages({
-					type: 'info',
-					text: res.data.message,
-				}),
-			);
-		}
+      dispatch(
+        setMessages({
+          type: 'info',
+          text: res.data.message,
+        }),
+      );
+    }
 
     return dispatch({
       type: CREATE_ROOM,
@@ -154,13 +152,13 @@ export const deleteRoom = (houseId: String, roomId: String) => async (
     const res = await api('DELETE', 'rooms', { houseId, roomId });
 
     if (res.data.message) {
-			dispatch(
-				setMessages({
-					type: 'info',
-					text: res.data.message,
-				}),
-			);
-		}
+      dispatch(
+        setMessages({
+          type: 'info',
+          text: res.data.message,
+        }),
+      );
+    }
 
     return dispatch({
       type: DELETE_ROOM,

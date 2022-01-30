@@ -5,8 +5,8 @@ export type Houses = {
 export type House = {
   name: string,
   _id: string,
-  user_id: string,
-  rooms_id: Array<String>,
+  user: string,
+  rooms: Array<String>,
 }
 
 export type CurrentHouseId = {

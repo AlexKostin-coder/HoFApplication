@@ -52,7 +52,7 @@ const RoomScreen: FC<RoomScreenProps> = props => {
   const {
     _id,
     name,
-    house_id,
+    house,
     image_id,
   } = rooms[String(roomId)] || {};
 

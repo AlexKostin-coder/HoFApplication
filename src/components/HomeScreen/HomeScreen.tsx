@@ -44,8 +44,8 @@ import {
 } from 'react-redux';
 
 import Avatar from '../widgets/Avatar/Avatar';
+import TempHumSensor from '../widgets/TempHumSensor/TempHumSensor';
 import { authUserSelector } from '../../core/users/users.selectors';
-import { categoryDevicesSelector } from '../../core/categoryDevices/categoryDevices.selectors';
 import { declOfNum } from '../../core/tools/declOfNum';
 import { getCategoryDevicesByUserId } from '../../core/categoryDevices/categoryDevices.actions';
 import { getCurrentUrl } from '../../core/tools/getCurrentUrl';
@@ -54,6 +54,7 @@ import { getRoomsByHouseId } from '../../core/rooms/rooms.actions';
 import { getUser } from '../../core/users/users.actions';
 import { roomsSelector } from '../../core/rooms/rooms.selectors';
 import { styles } from './HomeScreen.style';
+import { temperatureSensorsSelector } from '../../core/devices/devices.selectors';
 
 interface HomeScreenProps {
   navigation: NavigationProp<ParamListBase>
@@ -71,7 +72,7 @@ const HomeScreen: FC<HomeScreenProps> = props => {
   const rooms = useSelector(roomsSelector);
   const houses = useSelector(housesSelector);
   const currentHouseId = useSelector(currentHouseIdSelector);
-  const categoryDevices = useSelector(categoryDevicesSelector);
+  const temperatureSensors = useSelector(temperatureSensorsSelector);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -137,8 +138,8 @@ const HomeScreen: FC<HomeScreenProps> = props => {
         return 0;
       })
       .filter((room_id) => {
-        const { house_id } = rooms[room_id];
-        return house_id === currentHouseId || house_id === ""
+        const { house } = rooms[room_id];
+        return house === currentHouseId || house === ""
       })
       .map((roomId, index) => {
         return { ...rooms[roomId] };
@@ -151,10 +152,10 @@ const HomeScreen: FC<HomeScreenProps> = props => {
       .map((house_id) => ({ ...houses[house_id] }))
     : [];
 
-  const categoryDevicesData = Object.keys(categoryDevices).length
-    ? Object.keys(categoryDevices)
-      .filter((category_devices_id) => category_devices_id !== "")
-      .map((category_devices_id) => ({ ...categoryDevices[category_devices_id] }))
+  const temperatureSensorsData = Object.keys(temperatureSensors).length
+    ? Object.keys(temperatureSensors)
+      .filter((temperature_sensor_id) => temperature_sensor_id !== "")
+      .map((temperature_sensor_id) => ({ ...temperatureSensors[temperature_sensor_id] }))
     : [];
 
   return (
@@ -264,41 +265,36 @@ const HomeScreen: FC<HomeScreenProps> = props => {
       <View style={styles.devices}>
         <Text style={styles.devices_title}>Пристрої</Text>
         <FlatList
-          data={categoryDevicesData}
+          data={temperatureSensorsData}
           style={styles.catagories_device_list}
           keyExtractor={(item, index) => item._id}
           numColumns={2}
-          renderItem={({ item: catagoryDevice, index }) => {
-            const {
-              _id: categoryId,
-              name,
-              alias,
-              image_id,
-            } = catagoryDevice;
-            return (
-              <TouchableOpacity
-                style={styles.catagories_device}
-                activeOpacity={0.6}
-                onPress={() => {
-                  navigation.navigate(DEVICES_SCREEN, {
-                    categoryId,
-                    title: name,
-                    alias,
-                  })
-                }}
-              >
-                <View style={styles.catagories_device_content}>
-                  <Image
-                    style={styles.catagories_device_image}
-                    source={
-                      require('../../assets/images/tempsensor.jpg')
-                    }
-                  />
-                  <Text style={styles.catagories_device_text}>{name}</Text>
-                </View>
-              </TouchableOpacity>
-            )
-          }}
+          renderItem={({ item: temperatureSensor, index }) => (
+            <TempHumSensor
+              {...temperatureSensor}
+            />
+            // <TouchableOpacity
+            //   style={styles.catagories_device}
+            //   activeOpacity={0.6}
+            //   onPress={() => {
+            //     navigation.navigate(DEVICES_SCREEN, {
+            //       temperatureSensorId,
+            //       title: name,
+            //     })
+            //   }}
+            // >
+            //   <View style={styles.catagories_device_content}>
+            //     <Image
+            //       style={styles.catagories_device_image}
+            //       source={
+            //         require('../../assets/images/tempsensor.jpg')
+            //       }
+            //     />
+            //     <Text style={styles.catagories_device_text}>{name}</Text>
+            //   </View>
+            // </TouchableOpacity>
+          )
+          }
         />
       </View>
     </View >

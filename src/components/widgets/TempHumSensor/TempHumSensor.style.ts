@@ -12,8 +12,8 @@ export const styles = StyleSheet.create({
     width: Math.floor(width / 2) - 18,
     padding: 10,
     borderRadius: 16,
-    elevation: 2,
-    margin: 5,
+    marginRight: 5,
+    marginVertical: 8,
     flexDirection: 'row',
   },
   details: {
@@ -36,8 +36,8 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-end'
   },
-  image: { 
-    width: 60, 
-    height: 60, 
+  image: {
+    width: 60,
+    height: 60,
   }
 });

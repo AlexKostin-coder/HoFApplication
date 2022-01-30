@@ -21,11 +21,15 @@ export const getDevicesByParam = (data: getDevicesData) => async (
       );
     }
 
-    const { devices } = normalizeDate(res.data.devices, 'devices');
+    const { devices } = normalizeDate(res.data.user_devices, 'devices');
+    const { temperature_sensors } = normalizeDate(res.data.user_devices[0]?.temperature_sensors || [], 'temperature_sensors');
 
     return dispatch({
       type: GET_DEVICES,
-      payload: { devices }
+      payload: {
+        devices,
+        temperature_sensors,
+      }
     });
 
   } catch (e: any) {

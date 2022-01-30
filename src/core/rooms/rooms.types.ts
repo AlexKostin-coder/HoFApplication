@@ -1,7 +1,7 @@
 export interface Room {
   _id: string,
   name: string,
-  house_id: string,
+  house: string,
   image_id: string,
 };
 

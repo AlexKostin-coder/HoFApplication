@@ -3,7 +3,7 @@ export const normalizeDate = (
   name: string,
   byField: string = '_id',
 ) => {
-  if (Array.isArray(data)) {
+  if (Array.isArray(data) && data.length) {
     return data.reduce(
       (acc, obj) => {
         acc[name][obj[byField]] = { ...obj };
@@ -19,5 +19,5 @@ export const normalizeDate = (
       [name]: { [data[byField]]: data },
     };
   }
-  return {};
+  return { [name]: {} };
 };

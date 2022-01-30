@@ -16,6 +16,7 @@ import {
   launchCamera,
   launchImageLibrary
 } from 'react-native-image-picker';
+import { HANDLE_ROOM_SCREEN, MAIN_TAB } from '../../core/navigation/navigation.const';
 import React,
 {
   FC,
@@ -37,7 +38,6 @@ import Camera from '../../assets/icons/camera.svg';
 import Edit from '../../assets/icons/edit.svg';
 import GalleryPhoto from '../../assets/icons/gallery-photo.svg';
 import Header from '../widgets/Header/Header';
-import { MAIN_TAB } from '../../core/navigation/navigation.const';
 import { MainStackParamList } from '../Navigation/MainStack';
 import { Menu } from 'native-base';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -85,7 +85,6 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
     image_id,
   } = rooms[String(roomId)] || {};
 
-  const [editableName, setEditableName] = useState<boolean>(false);
   const [roomName, setRoomName] = useState<string>(name);
   const [imageData, setImageData] = useState<ImageData>({
     height: 0,
@@ -95,43 +94,33 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
     type: "",
     fileSize: 0,
   });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleRoom = async () => {
-    setIsLoading(true);
-    setEditableName(false);
     try {
-      if (type === 'edit') {
-        await dispatch(editRoom({ roomId, name: roomName }));
-        await dispatch(getHouses());
-        if (imageData.uri) {
-          await dispatch(uploadImageRoom({ ...imageData, roomId }));
-        }
-      }
-      else {
-        if (roomName) {
-          const res = await dispatch(createRoom({
-            houseId: currentHouseId,
-            name: roomName,
-          }));
-          if (res.type === CREATE_ROOM) {
-            const newRoomId = res.payload._id;
-            if (imageData.uri) {
-              const res = await dispatch(uploadImageRoom({ ...imageData, roomId: newRoomId }));
-              if (res.type === UPLOAD_IMAGE_ROOM) {
-                await dispatch(getHouses());
-                return navigation.goBack();
-              }
-            }
-            await dispatch(getHouses());
-            navigation.goBack();
-          }
-        }
+      const action = type === 'edit'
+        ? await dispatch(editRoom({ roomId, name: roomName }))
+        : await dispatch(createRoom({
+          houseId: currentHouseId,
+          name: roomName,
+        }));
+      await dispatch(action);
+      await dispatch(getHouses());
+      const res = await dispatch(getRoomsByHouseId(currentHouseId));
+
+      if (type === 'add') {
+        const rooms = Object.keys(res.payload.rooms);
+        const new_room_id = rooms.length
+          ? rooms.find((room, index) => index == (rooms.length - 1))
+          : "";
+
+        navigation.replace(HANDLE_ROOM_SCREEN, {
+          roomId: new_room_id || "",
+          type: 'edit',
+        });
       }
     } catch (e) {
       console.log({ e });
     }
-    setIsLoading(false);
   }
 
   const confirmDelete = () => {
@@ -283,42 +272,16 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
         </Menu>
         <View style={styles.info_room}>
           <Text style={styles.label}>Назва:</Text>
-          {
-            !editableName
-              ? (
-                <TouchableOpacity
-                  style={styles.edit_info_room_block}
-                  onPress={() => setEditableName(true)}
-                >
-                  <Text style={styles.name}>
-                    {
-                      roomName
-                        ? roomName
-                        : name
-                          ? name
-                          : 'Введіть назву кімнати...'
-                    }
-                  </Text>
-                  <Edit
-                    width={16}
-                    height={16}
-                    fill={'#333333'}
-                  />
-                </TouchableOpacity>
-              )
-              : (
-                <View style={styles.edit_info_room_block}>
-                  <TextInput
-                    value={roomName}
-                    autoFocus={true}
-                    placeholder='Введіть назву кімнати...'
-                    placeholderTextColor={'grey'}
-                    style={[styles.name, styles.textInput]}
-                    onChangeText={(text) => setRoomName(text)}
-                  />
-                </View>
-              )
-          }
+          <View style={styles.edit_info_room_block}>
+            <TextInput
+              value={roomName}
+              autoFocus={false}
+              placeholder='Введіть назву кімнати...'
+              placeholderTextColor={'grey'}
+              style={[styles.name, styles.textInput]}
+              onChangeText={(text) => setRoomName(text)}
+            />
+          </View>
           <View style={[styles.border, { marginTop: 6, }]} />
         </View>
         <TouchableOpacity

@@ -11,9 +11,8 @@ export const UPLOAD_IMAGE_ROOM = 'UPLOAD_IMAGE_ROOM';
 export const defaultRoom: Room = {
   _id: '',
   name: '',
-  house_id: '',
+  house: '',
   image_id: '',
-  count_devices: 0,
 };
 export const defaultRooms: Rooms = {
   [defaultRoom._id]: defaultRoom

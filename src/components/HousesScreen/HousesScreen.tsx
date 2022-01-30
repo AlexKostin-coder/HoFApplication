@@ -116,10 +116,8 @@ const HousesScreen: FC = props => {
         await dispatch(deleteHouse(rowKey));
         await getData();
         if (currentHouseId === rowKey) {
-          const house = Object.keys(houses).filter((house, index) => index == 1) || [];
-          if (house.length && house[0]) {
-            dispatch(setCurrentHouse(house[0]));
-          }
+          const house = Object.keys(houses).find((house, index) => index == 1) || "";
+          dispatch(setCurrentHouse(house));
         }
       }
     } catch (e) {

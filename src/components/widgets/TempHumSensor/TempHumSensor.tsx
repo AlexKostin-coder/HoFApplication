@@ -11,25 +11,21 @@ import WeatherDropsRain from '../../../assets/icons/weather-drops-rain.svg';
 import { styles } from './TempHumSensor.style';
 
 interface TempHumSensorProps {
-  Sensor: string,
-  StatusTemp: string | number,
-  StatusHum: string | number,
-  Range_max: string | number,
-  Range_min: string | number,
-  Battery_charge: string | number,
+  name: string,
+  temperature: number,
+  humidity?: number,
   _id: string,
-  id_Sensor: string,
-  StartTime: Array<{}>,
-  EndTime: Array<{}>,
+  custom_id: string,
 }
 
 const TempHumSensor: FC<TempHumSensorProps> = props => {
 
   const {
-    Sensor: name = "",
-    StatusTemp: temperature = "",
-    StatusHum: hymidity = "",
-    id_Sensor: id_sensor = "",
+    name,
+    temperature,
+    humidity,
+    _id,
+    custom_id,
   } = props;
 
   return (
@@ -47,12 +43,12 @@ const TempHumSensor: FC<TempHumSensorProps> = props => {
               fill={'#008CCC'}
             />
             <Text style={[styles.text, { fontWeight: 'normal', color: 'grey' }]}>
-              {temperature !== "undefined" ? temperature : ""}
+              {temperature || ""}
             </Text>
           </View>
           <View style={styles.info_sensor_item}>
             {
-              hymidity !== "undefined" ?
+              humidity ?
                 <>
                   <WeatherDropsRain
                     width={18}
@@ -60,7 +56,7 @@ const TempHumSensor: FC<TempHumSensorProps> = props => {
                     fill={'#008CCC'}
                   />
                   <Text style={[styles.text, { fontWeight: 'normal', color: 'grey' }]}>
-                    {hymidity !== "undefined" ? hymidity : ""}
+                    {humidity || ""}
                   </Text>
                 </>
                 : null
