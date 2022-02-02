@@ -261,7 +261,6 @@ const HomeScreen: FC<HomeScreenProps> = props => {
         <FlatList
           data={temperatureSensorsData}
           style={styles.catagories_device_list}
-          // columnWrapperStyle={{ justifyContent: 'space-between' }}
           keyExtractor={(item, index) => item._id}
           numColumns={2}
           renderItem={({ item: temperatureSensor, index }) => (
