@@ -1,12 +1,17 @@
 import {
+  ADD_TEMPERATURE_SENSORS_IN_ROOM,
   CREATE_ROOM,
   DELETE_ROOM,
+  DELETE_TEMPERATURE_SENSORS_IN_ROOM,
   EDIT_ROOM,
   GET_ROOMS,
-  UPLOAD_IMAGE_ROOM,
+  UPLOAD_IMAGE_ROOM
 } from "./rooms.const";
+import {
+  addTemperetureSensorsData,
+  getRoomsByParamData
+} from "./rooms.types";
 
-import { getRoomsByParamData } from "./rooms.types";
 import { normalizeDate } from "../tools/normalizeData";
 import { setMessages } from "../ui/ui.actions";
 
@@ -217,4 +222,67 @@ export const uploadImageRoom = (
       );
     }
   };
+
+export const addTemperetureSensors = (data: addTemperetureSensorsData) => async (
+  dispatch: Dispatch,
+  getState: GetStateType,
+  api: API
+) => {
+  try {
+    const res = await api('POST', 'addTemperetureSensors', data);
+
+    if (res.data.message) {
+      dispatch(
+        setMessages({
+          type: 'info',
+          text: res.data.message,
+        }),
+      );
+    }
+
+    return dispatch({
+      type: ADD_TEMPERATURE_SENSORS_IN_ROOM,
+      payload: {}
+    });
+  } catch (e: any) {
+    return dispatch(
+      setMessages({
+        type: 'warning',
+        text: e.message,
+      })
+    );
+  }
+}
+
+export const deleteTemperetureSensors = (data: addTemperetureSensorsData) => async (
+  dispatch: Dispatch,
+  getState: GetStateType,
+  api: API
+) => {
+  try {
+    const res = await api('POST', 'deleteTemperetureSensors', data);
+
+    if (res.data.message) {
+      dispatch(
+        setMessages({
+          type: 'info',
+          text: res.data.message,
+        }),
+      );
+    }
+
+    return dispatch({
+      type: DELETE_TEMPERATURE_SENSORS_IN_ROOM,
+      payload: {}
+    });
+
+  } catch (e: any) {
+    return dispatch(
+      setMessages({
+        type: 'warning',
+        text: e.message,
+      })
+    );
+  }
+}
 

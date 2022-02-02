@@ -1,4 +1,8 @@
-import { GET_TEMPERATURE_SENESORS } from "./devices.const";
+import {
+  ADD_TEMPERATURE_SENSORS_IN_ROOM,
+  GET_TEMPERATURE_SENESORS
+} from "./devices.const";
+
 import { getDevicesData } from "./devices.types";
 import { normalizeDate } from "../tools/normalizeData";
 import { setMessages } from "../ui/ui.actions";
@@ -37,3 +41,4 @@ export const getTemperatureSensorsByParam = (data: getDevicesData) => async (
     );
   }
 }
+

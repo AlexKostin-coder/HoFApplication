@@ -18,7 +18,8 @@ export const styles = StyleSheet.create({
   },
   details: {
     flex: 3,
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    position: 'relative',
   },
   info_sensor: {
     flexDirection: 'row',
@@ -39,5 +40,11 @@ export const styles = StyleSheet.create({
   image: {
     width: 60,
     height: 60,
+  },
+  check_mark: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    color: 'green'
   }
 });

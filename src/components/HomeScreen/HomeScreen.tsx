@@ -113,12 +113,12 @@ const HomeScreen: FC<HomeScreenProps> = props => {
   const roomsData = Object.keys(rooms).length
     ? Object.keys(rooms)
       .sort((a, b) => {
-        const roomIdA = rooms[a]._id;
-        const roomIdB = rooms[b]._id;
-        if (roomIdA < roomIdB) {
+        const roomAName = rooms[a].name;
+        const roomBName = rooms[b].name;
+        if (roomAName < roomBName) {
           return 1;
         }
-        if (roomIdA > roomIdB) {
+        if (roomAName > roomBName) {
           return -1;
         }
         return 0;
@@ -267,28 +267,7 @@ const HomeScreen: FC<HomeScreenProps> = props => {
             <TempHumSensor
               {...temperatureSensor}
             />
-            // <TouchableOpacity
-            //   style={styles.catagories_device}
-            //   activeOpacity={0.6}
-            //   onPress={() => {
-            //     navigation.navigate(DEVICES_SCREEN, {
-            //       temperatureSensorId,
-            //       title: name,
-            //     })
-            //   }}
-            // >
-            //   <View style={styles.catagories_device_content}>
-            //     <Image
-            //       style={styles.catagories_device_image}
-            //       source={
-            //         require('../../assets/images/tempsensor.jpg')
-            //       }
-            //     />
-            //     <Text style={styles.catagories_device_text}>{name}</Text>
-            //   </View>
-            // </TouchableOpacity>
-          )
-          }
+          )}
         />
       </View>
     </View >

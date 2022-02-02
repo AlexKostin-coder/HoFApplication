@@ -4,8 +4,9 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import React, { FC } from 'react'
+import React, { FC } from 'react';
 
+import { CheckIcon } from 'native-base';
 import Temperature from '../../../assets/icons/temperature.svg';
 import WeatherDropsRain from '../../../assets/icons/weather-drops-rain.svg';
 import { styles } from './TempHumSensor.style';
@@ -15,6 +16,8 @@ interface TempHumSensorProps {
   temperature: number,
   humidity?: number,
   _id: string,
+  selected?: Array<string>,
+  onPress?: () => void,
 }
 
 const TempHumSensor: FC<TempHumSensorProps> = props => {
@@ -24,10 +27,15 @@ const TempHumSensor: FC<TempHumSensorProps> = props => {
     temperature,
     humidity,
     _id,
+    selected,
+    onPress,
   } = props;
 
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={onPress}
+    >
       <View style={styles.details}>
         <View>
           <Text style={styles.text}>{name}</Text>
@@ -63,6 +71,7 @@ const TempHumSensor: FC<TempHumSensorProps> = props => {
         </View>
       </View>
       <View style={styles.image_wrapper}>
+        <CheckIcon style={styles.check_mark} size={selected?.includes(_id) ? "5" : "0"} />
         <Image
           style={styles.image}
           resizeMode='cover'

@@ -27,6 +27,7 @@ import { getRoomsByParam } from '../../core/rooms/rooms.actions';
 import { getTemperatureSensorsByParam } from '../../core/devices/devices.actions';
 import { roomsSelector } from '../../core/rooms/rooms.selectors';
 import { styles } from './RoomScreen.style';
+import { temperatureSensorsSelector } from '../../core/devices/devices.selectors';
 
 type Props = NativeStackScreenProps<MainStackParamList, 'Room'>;
 
@@ -47,6 +48,7 @@ const RoomScreen: FC<RoomScreenProps> = props => {
 
   const rooms = useSelector(roomsSelector);
   const categoryDevices = useSelector(categoryDevicesSelector);
+  const temperatureSensors = useSelector(temperatureSensorsSelector);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -72,6 +74,10 @@ const RoomScreen: FC<RoomScreenProps> = props => {
   useEffect(() => {
     getDataRoom();
   }, []);
+
+  const temperatureSensorsData = temperature_sensors && temperature_sensors.length
+    ? temperature_sensors.map((temperature_sensor_id) => ({ ...temperatureSensors[temperature_sensor_id] }))
+    : [];
 
   const categoryDevicesData = Object.keys(categoryDevices).length
     ? Object.keys(categoryDevices)
@@ -114,8 +120,8 @@ const RoomScreen: FC<RoomScreenProps> = props => {
           />
         </View>
         <View style={styles.devices}>
-          {/* <FlatList
-            data={devicesRoom}
+          <FlatList
+            data={temperatureSensorsData}
             numColumns={2}
             keyExtractor={(item, index) => `${item._id}-${index}-${roomId}`}
             renderItem={({ item, index }) => (
@@ -130,7 +136,7 @@ const RoomScreen: FC<RoomScreenProps> = props => {
                 onRefresh={async () => await getDataRoom()}
               />
             }
-          /> */}
+          />
         </View>
       </View>
     </View>

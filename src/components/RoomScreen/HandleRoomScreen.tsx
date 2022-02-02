@@ -1,6 +1,13 @@
 import {
+  Actionsheet,
+  Divider,
+  Menu,
+  useDisclose
+} from 'native-base';
+import {
   Alert,
   Button,
+  FlatList,
   Image,
   Text,
   TextInput,
@@ -23,8 +30,10 @@ import React,
   useState,
 } from 'react';
 import {
+  addTemperetureSensors,
   createRoom,
   deleteRoom,
+  deleteTemperetureSensors,
   editRoom,
   getRoomsByParam,
   uploadImageRoom,
@@ -39,8 +48,8 @@ import Edit from '../../assets/icons/edit.svg';
 import GalleryPhoto from '../../assets/icons/gallery-photo.svg';
 import Header from '../widgets/Header/Header';
 import { MainStackParamList } from '../Navigation/MainStack';
-import { Menu } from 'native-base';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import TempHumSensor from '../widgets/TempHumSensor/TempHumSensor';
 import Trash from '../../assets/icons/trash.svg';
 import { currentHouseIdSelector } from '../../core/houses/houses.selectors';
 import { getCurrentUrl } from '../../core/tools/getCurrentUrl';
@@ -48,6 +57,7 @@ import { getHouses } from '../../core/houses/houses.actions';
 import { requestCameraPermission } from '../../handlers/PermissionAndroid';
 import { roomsSelector } from '../../core/rooms/rooms.selectors';
 import { styles } from './HandleRoomScreen.style';
+import { temperatureSensorsSelector } from '../../core/devices/devices.selectors';
 
 type Props = NativeStackScreenProps<MainStackParamList, 'Room'>;
 
@@ -78,14 +88,25 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
 
   const rooms = useSelector(roomsSelector);
   const currentHouseId = useSelector(currentHouseIdSelector);
+  const temperatureSensors = useSelector(temperatureSensorsSelector);
   const dispatch = useDispatch();
 
   const {
     name,
     image_id,
+    temperature_sensors,
   } = rooms[String(roomId)] || {};
 
   const [roomName, setRoomName] = useState<string>(name);
+  const [selectedDevices, setSelectedDevices] = useState<Array<string>>([]);
+  const [typeAction, setTypeAction] = useState<"add" | "delete">("add");
+
+  const {
+    isOpen,
+    onOpen,
+    onClose
+  } = useDisclose();
+
   const [imageData, setImageData] = useState<ImageData>({
     height: 0,
     uri: "",
@@ -125,8 +146,8 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
 
   const confirmDelete = () => {
     Alert.alert(
-      "Видалення!",
-      `Ви точно бажаєте видалити кімнату ${name}?`,
+      "Видалення кімнати!",
+      `Ви дійсно бажаєте видалити кімнату ${name}? Після видалення, дію неможливо буде відмінити!`,
       [
         {
           text: "Відмінити",
@@ -151,6 +172,44 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
     } catch (e) {
       console.log({ e });
     }
+  }
+
+  const addTemperetureSensorInRoom = async () => {
+    try {
+      const data = {
+        room_id: roomId,
+        devices_id: selectedDevices
+      };
+      await dispatch(addTemperetureSensors(data));
+      await dispatch(getRoomsByParam({ room_id: roomId }));
+      setSelectedDevices([]);
+      onClose();
+    } catch (e) {
+      console.log({ e });
+    }
+  }
+
+  const deleteTemperetureSensorWithRoom = async () => {
+    try {
+      const data = {
+        room_id: roomId,
+        devices_id: selectedDevices
+      };
+      await dispatch(deleteTemperetureSensors(data));
+      await dispatch(getRoomsByParam({ room_id: roomId }));
+      setSelectedDevices([]);
+      setTypeAction("add");
+    } catch (e) {
+      console.log({ e });
+    }
+  }
+
+  const selectTemperatureSensors = (temperature_sensor_id: string, type_select: "delete" | "add") => {
+    setTypeAction(type_select);
+    if (selectedDevices.includes(temperature_sensor_id)) {
+      return setSelectedDevices((prev) => prev.filter((id) => id !== temperature_sensor_id));
+    }
+    return setSelectedDevices((prev) => [...prev, temperature_sensor_id]);
   }
 
   const editProps = {
@@ -199,6 +258,21 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
     }
   }
 
+  const temperatureSensorsData = temperature_sensors && temperature_sensors.length
+    ? temperature_sensors.map((temperature_sensor_id) => ({ ...temperatureSensors[temperature_sensor_id] }))
+    : [];
+
+  const temperatureSensorsDataAll = Object.keys(temperatureSensors).length
+    ? Object.keys(temperatureSensors)
+      .filter((temperature_sensor_id) => {
+        const hasRoom = temperatureSensors[temperature_sensor_id]?.room
+          ? true
+          : false;
+        return temperature_sensor_id !== "" && temperature_sensors.includes(temperature_sensor_id) && !hasRoom
+      })
+      .map((temperature_sensor_id) => ({ ...temperatureSensors[temperature_sensor_id] }))
+    : [];
+
   return (
     <View style={styles.container}>
       <Header
@@ -213,67 +287,8 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
         {...type === 'edit' ? editProps : {}}
       />
       <View style={styles.content}>
-        <Menu
-          w="160"
-          trigger={(triggerProps) => {
-            return (
-              <TouchableOpacity
-                style={styles.image_wrapper}
-                {...triggerProps}
-              >
-                {
-                  imageData.uri || image_id
-                    ? (
-                      <Image
-                        style={styles.image}
-                        resizeMode='cover'
-                        source={{
-                          uri: imageData.uri ? imageData.uri : `${getCurrentUrl()}images/${image_id}`,
-                        }}
-                      />
-                    )
-                    : null
-                }
-                <View style={styles.icon_camera}>
-                  <Camera
-                    width={20}
-                    height={20}
-                    fill={
-                      imageData.uri || image_id
-                        ? 'white'
-                        : '#333333'
-                    }
-                  />
-                </View>
-              </TouchableOpacity>
-            )
-          }}
-        >
-          <Menu.Item onPress={() => chooseImage('camera')}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Camera
-                width={20}
-                height={20}
-                fill={'#333333'}
-              />
-              <Text style={{ marginLeft: 10, fontSize: 14, color: 'grey' }}>Камера</Text>
-            </View>
-            <View style={[styles.border, { marginLeft: 0 }]} />
-          </Menu.Item>
-          <Menu.Item onPress={() => chooseImage('gallery')}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <GalleryPhoto
-                width={20}
-                height={20}
-                fill={'#333333'}
-              />
-              <Text style={{ marginLeft: 10, fontSize: 14, color: 'grey' }}>Галерея</Text>
-            </View>
-            <View style={[styles.border, { marginLeft: 0 }]} />
-          </Menu.Item>
-        </Menu>
         <View style={styles.info_room}>
-          <Text style={styles.label}>Назва:</Text>
+          <Text style={styles.label}>Назва</Text>
           <View style={styles.edit_info_room_block}>
             <TextInput
               value={roomName}
@@ -284,17 +299,86 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
               onChangeText={(text) => setRoomName(text)}
             />
           </View>
-          <View style={[styles.border, { marginTop: 6, }]} />
+          <Divider />
+        </View>
+        <View style={styles.devices_room}>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={styles.label}>Пристрої</Text>
+            <TouchableOpacity
+              style={{ marginLeft: 10 }}
+              onPress={onOpen}
+            >
+              <Text style={{ color: 'black', fontSize: 18 }}>+</Text>
+            </TouchableOpacity>
+          </View>
+          {
+            temperatureSensorsData.length
+              ? (
+                <FlatList
+                  data={temperatureSensorsData}
+                  keyExtractor={(item, index) => item._id}
+                  numColumns={2}
+                  renderItem={({ item: temperatureSensor, index }) => (
+                    <TempHumSensor
+                      {...temperatureSensor}
+                      onPress={() => selectTemperatureSensors(temperatureSensor._id, "delete")}
+                      selected={selectedDevices}
+                    />
+                  )}
+                />
+              )
+              : (
+                <View style={styles.no_devices_wrapper}>
+                  <Text style={styles.no_devices_text}>Пристрої відсутні, щоб додати натисніть "+" та оберіть зі списку</Text>
+                </View>
+              )
+          }
         </View>
         <TouchableOpacity
-          onPress={handleRoom}
+          onPress={typeAction === "delete" && selectedDevices.length ? deleteTemperetureSensorWithRoom : handleRoom}
           style={styles.handle_btn}
         >
           <Text style={styles.handle_btn_title}>
-            {type === "edit" ? "Зберегти" : "Додати"}
+            {
+              typeAction === "delete" && selectedDevices.length
+                ? "Видалити пристрої"
+                : type === "edit"
+                  ? "Зберегти"
+                  : "Додати"
+            }
           </Text>
         </TouchableOpacity>
       </View>
+      <Actionsheet isOpen={isOpen} onClose={() => { onClose(); setSelectedDevices([]); }}>
+        <Actionsheet.Content>
+          <FlatList
+            data={temperatureSensorsDataAll}
+            numColumns={2}
+            keyExtractor={(item, index) => item._id}
+            renderItem={({ item: temperatureSensor, index }) => (
+              <TempHumSensor
+                {...temperatureSensor}
+                onPress={() => selectTemperatureSensors(temperatureSensor._id, "add")}
+                selected={selectedDevices}
+              />
+            )}
+          />
+          {
+            selectedDevices.length
+              ? (
+                <TouchableOpacity
+                  onPress={addTemperetureSensorInRoom}
+                  style={styles.btn_add_new_devices}
+                >
+                  <Text style={styles.handle_btn_title}>
+                    Додати
+                  </Text>
+                </TouchableOpacity>
+              )
+              : null
+          }
+        </Actionsheet.Content>
+      </Actionsheet>
     </View>
   )
 }

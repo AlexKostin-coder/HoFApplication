@@ -3,7 +3,7 @@ export interface Room {
   name: string,
   house: string,
   image_id: string,
-  temperature_sensors: Array<String>,
+  temperature_sensors: Array<string>,
 };
 
 export interface Rooms {
@@ -13,4 +13,9 @@ export interface Rooms {
 export type getRoomsByParamData = {
   house_id?: String,
   room_id?: String,
+}
+
+export type addTemperetureSensorsData = {
+  room_id?: String,
+  devices_id: Array<string>
 }
