@@ -3,6 +3,7 @@ export interface Room {
   name: string,
   house: string,
   image_id: string,
+  temperature_sensors: Array<String>,
 };
 
 export interface Rooms {

@@ -23,7 +23,7 @@ import Settings from '../../assets/icons/settings.svg';
 import TempHumSensor from '../widgets/TempHumSensor/TempHumSensor';
 import Temperature from '../../assets/icons/temperature.svg';
 import { categoryDevicesSelector } from '../../core/categoryDevices/categoryDevices.selectors';
-import { getDevicesByParam } from '../../core/devices/devices.actions';
+import { getTemperatureSensorsByParam } from '../../core/devices/devices.actions';
 import { roomsSelector } from '../../core/rooms/rooms.selectors';
 import { styles } from './RoomScreen.style';
 
@@ -53,12 +53,17 @@ const RoomScreen: FC<RoomScreenProps> = props => {
     _id,
     name,
     house,
+    temperature_sensors,
     image_id,
   } = rooms[String(roomId)] || {};
 
   const getDataRoom = async () => {
     setIsLoading(true);
-    await dispatch(getDevicesByParam({ room_id: _id }));
+    try {
+      await dispatch(getTemperatureSensorsByParam({ room_id: _id }));
+    } catch (e) {
+      console.log({ e });
+    }
     setIsLoading(false);
   }
 

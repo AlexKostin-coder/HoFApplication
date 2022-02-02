@@ -7,6 +7,7 @@ export type House = {
   _id: string,
   user: string,
   rooms: Array<String>,
+  temperature_sensors: Array<String>,
 }
 
 export type CurrentHouseId = {

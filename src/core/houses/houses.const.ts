@@ -19,6 +19,7 @@ export const defaultHouse: House = {
   name: '',
   user: "",
   rooms: [],
+  temperature_sensors: [],
 }
 
 export const defaultHouses: Houses = {

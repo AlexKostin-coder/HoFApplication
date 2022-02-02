@@ -6,13 +6,6 @@ import {
   useDisclose
 } from 'native-base';
 import {
-  DEVICES_SCREEN,
-  HANDLE_ROOM_SCREEN,
-  HOUSES_SCREEN,
-  PROFILE_SCREEN,
-  ROOM_SCREEN
-} from '../../core/navigation/navigation.const';
-import {
   FlatList,
   Image,
   ImageBackground,
@@ -21,6 +14,12 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
+import {
+  HANDLE_ROOM_SCREEN,
+  HOUSES_SCREEN,
+  PROFILE_SCREEN,
+  ROOM_SCREEN
+} from '../../core/navigation/navigation.const';
 import {
   NavigationProp,
   ParamListBase
@@ -47,11 +46,9 @@ import Avatar from '../widgets/Avatar/Avatar';
 import TempHumSensor from '../widgets/TempHumSensor/TempHumSensor';
 import { authUserSelector } from '../../core/users/users.selectors';
 import { declOfNum } from '../../core/tools/declOfNum';
-import { getCategoryDevicesByUserId } from '../../core/categoryDevices/categoryDevices.actions';
 import { getCurrentUrl } from '../../core/tools/getCurrentUrl';
-import { getDevicesByParam } from '../../core/devices/devices.actions';
 import { getRoomsByHouseId } from '../../core/rooms/rooms.actions';
-import { getUser } from '../../core/users/users.actions';
+import { getTemperatureSensorsByParam } from '../../core/devices/devices.actions';
 import { roomsSelector } from '../../core/rooms/rooms.selectors';
 import { styles } from './HomeScreen.style';
 import { temperatureSensorsSelector } from '../../core/devices/devices.selectors';
@@ -79,14 +76,12 @@ const HomeScreen: FC<HomeScreenProps> = props => {
   const getData = async () => {
     setIsLoading(true);
     try {
-      await Promise.all([
-        dispatch(getUser()),
-        dispatch(getHouses()),
-        dispatch(getCategoryDevicesByUserId()),
-      ])
+      await dispatch(getHouses());
       if (currentHouseId) {
-        await dispatch(getRoomsByHouseId(currentHouseId));
-        await dispatch(getDevicesByParam({ house_id: currentHouseId }));
+        await Promise.all([
+          dispatch(getRoomsByHouseId(currentHouseId)),
+          dispatch(getTemperatureSensorsByParam({ house_id: currentHouseId })),
+        ]);
       }
     } catch (e) {
       console.log({ e });
@@ -98,15 +93,6 @@ const HomeScreen: FC<HomeScreenProps> = props => {
     getData();
   }, [currentHouseId]);
 
-  const getDataForHouse = async (house_id: string) => {
-    setIsLoading(true);
-    if (house_id) {
-      await dispatch(getRoomsByHouseId(house_id));
-      await dispatch(getDevicesByParam({ house_id }));
-    }
-    setIsLoading(false);
-  }
-
   const {
     isOpen,
     onOpen,
@@ -116,7 +102,7 @@ const HomeScreen: FC<HomeScreenProps> = props => {
   const selectCurrentHouseId = (house_id: string) => {
     dispatch(setCurrentHouse(house_id));
     onClose();
-    getDataForHouse(house_id);
+    getData();
   }
 
   const {
@@ -154,7 +140,10 @@ const HomeScreen: FC<HomeScreenProps> = props => {
 
   const temperatureSensorsData = Object.keys(temperatureSensors).length
     ? Object.keys(temperatureSensors)
-      .filter((temperature_sensor_id) => temperature_sensor_id !== "")
+      .filter((temperature_sensor_id) => {
+        const { house } = temperatureSensors[temperature_sensor_id];
+        return temperature_sensor_id !== "" && house === currentHouseId
+      })
       .map((temperature_sensor_id) => ({ ...temperatureSensors[temperature_sensor_id] }))
     : [];
 

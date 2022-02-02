@@ -1,16 +1,16 @@
-import { GET_DEVICES } from "./devices.const";
+import { GET_TEMPERATURE_SENESORS } from "./devices.const";
 import { getDevicesData } from "./devices.types";
 import { normalizeDate } from "../tools/normalizeData";
 import { setMessages } from "../ui/ui.actions";
 
-export const getDevicesByParam = (data: getDevicesData) => async (
+export const getTemperatureSensorsByParam = (data: getDevicesData) => async (
   dispatch: Dispatch,
   getState: GetStateType,
   api: API
 ) => {
   try {
 
-    const res = await api('POST', 'getDevicesByParam', data);
+    const res = await api('POST', 'getTemperatureSensorsByParam', data);
 
     if (res.data.message) {
       dispatch(
@@ -21,15 +21,11 @@ export const getDevicesByParam = (data: getDevicesData) => async (
       );
     }
 
-    const { devices } = normalizeDate(res.data.user_devices, 'devices');
-    const { temperature_sensors } = normalizeDate(res.data.user_devices[0]?.temperature_sensors || [], 'temperature_sensors');
+    const temperature_sensors = normalizeDate(res.data.temperature_sensors, 'temperature_sensors');
 
     return dispatch({
-      type: GET_DEVICES,
-      payload: {
-        devices,
-        temperature_sensors,
-      }
+      type: GET_TEMPERATURE_SENESORS,
+      payload: temperature_sensors
     });
 
   } catch (e: any) {

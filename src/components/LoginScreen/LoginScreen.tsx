@@ -16,6 +16,7 @@ import { MainStackParamList } from '../Navigation/LoginStack';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { REGISTRATION_SCREEN } from '../../core/navigation/navigation.const';
 import { getAuth } from '../../core/auth/auth.actions';
+import { getUser } from '../../core/users/users.actions';
 import md5 from 'md5';
 import { styles } from './LoginScreen.style';
 import { useDispatch } from 'react-redux';
@@ -44,15 +45,20 @@ const LoginScreen: FC<LoginScreenProps> = (props) => {
     if (!validPass.status) {
       setShowError(true);
     }
+
     if (email.length && password.length) {
+      setIsLoading(true);
       try {
-        setIsLoading(true);
         await dispatch(getAuth(email, md5(password)));
-        setIsLoading(false);
+        await dispatch(getUser());
+        setEmail("");
+        setPassword("");
+        setShowKeyboard(false);
+        setShowError(false);
       } catch (e) {
-        setIsLoading(false);
         console.log({ e });
       }
+      setIsLoading(false);
     }
   }
 

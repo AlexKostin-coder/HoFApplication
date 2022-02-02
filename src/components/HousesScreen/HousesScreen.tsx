@@ -168,16 +168,16 @@ const HousesScreen: FC = props => {
           const {
             _id,
             name,
-            rooms_id,
+            rooms,
+            temperature_sensors
           } = item;
 
-          const count_rooms = rooms_id && rooms_id.length
-            ? rooms_id.length
+          const count_rooms = rooms && rooms.length
+            ? rooms.length
             : 0;
 
-          const count_devices = userDevices && Object.keys(userDevices).length
-            ? Object.keys(userDevices)
-              .filter((user_devices_id) => userDevices[user_devices_id].house_id === _id).length
+          const count_devices = temperature_sensors && temperature_sensors.length
+            ? temperature_sensors.length
             : 0;
 
           return (
