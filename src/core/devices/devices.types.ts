@@ -30,7 +30,6 @@ export type TempSensor = {
   _id: string,
   name: string,
   temperature: number,
-  custom_id: string,
   category: string,
   house: string,
   room: string

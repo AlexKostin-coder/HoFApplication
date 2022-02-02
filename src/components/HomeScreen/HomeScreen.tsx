@@ -47,7 +47,7 @@ import TempHumSensor from '../widgets/TempHumSensor/TempHumSensor';
 import { authUserSelector } from '../../core/users/users.selectors';
 import { declOfNum } from '../../core/tools/declOfNum';
 import { getCurrentUrl } from '../../core/tools/getCurrentUrl';
-import { getRoomsByHouseId } from '../../core/rooms/rooms.actions';
+import { getRoomsByParam } from '../../core/rooms/rooms.actions';
 import { getTemperatureSensorsByParam } from '../../core/devices/devices.actions';
 import { roomsSelector } from '../../core/rooms/rooms.selectors';
 import { styles } from './HomeScreen.style';
@@ -79,7 +79,7 @@ const HomeScreen: FC<HomeScreenProps> = props => {
       await dispatch(getHouses());
       if (currentHouseId) {
         await Promise.all([
-          dispatch(getRoomsByHouseId(currentHouseId)),
+          dispatch(getRoomsByParam({ house_id: currentHouseId })),
           dispatch(getTemperatureSensorsByParam({ house_id: currentHouseId })),
         ]);
       }
@@ -205,11 +205,16 @@ const HomeScreen: FC<HomeScreenProps> = props => {
               name,
               _id,
               image_id,
+              temperature_sensors,
             } = room;
 
             const addRoom = _id === ""
               ? true
               : false;
+
+            const count_devices = temperature_sensors && temperature_sensors.length
+              ? temperature_sensors.length
+              : 0;
 
             return (
               <TouchableOpacity
@@ -236,7 +241,7 @@ const HomeScreen: FC<HomeScreenProps> = props => {
                         style={styles.room_content}
                       >
                         <Text style={[styles.room_name, !image_id ? { color: 'black' } : {}]}>{name}</Text>
-                        <Text style={[styles.room_quantity_device, !image_id ? { color: 'grey' } : {}]}>{0} {declOfNum(0, ['пристрій', 'пристрої', 'пристроїв'])}</Text>
+                        <Text style={[styles.room_quantity_device, !image_id ? { color: 'grey' } : {}]}>{count_devices} {declOfNum(count_devices, ['пристрій', 'пристрої', 'пристроїв'])}</Text>
                       </ImageBackground>
                     )
                 }
@@ -256,6 +261,7 @@ const HomeScreen: FC<HomeScreenProps> = props => {
         <FlatList
           data={temperatureSensorsData}
           style={styles.catagories_device_list}
+          // columnWrapperStyle={{ justifyContent: 'space-between' }}
           keyExtractor={(item, index) => item._id}
           numColumns={2}
           renderItem={({ item: temperatureSensor, index }) => (

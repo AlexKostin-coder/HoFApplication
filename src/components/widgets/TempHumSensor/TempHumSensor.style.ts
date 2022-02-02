@@ -8,12 +8,12 @@ const { width, height } = Dimensions.get('window');
 export const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    height: 120,
-    width: Math.floor(width / 2) - 18,
+    height: (width / 3) - 16,
+    width: (width / 2) - 16,
     padding: 10,
     borderRadius: 16,
-    marginRight: 5,
-    marginVertical: 8,
+    marginRight: 12,
+    marginBottom: 12,
     flexDirection: 'row',
   },
   details: {

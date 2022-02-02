@@ -12,8 +12,9 @@ export const defaultTemperatureSensor: TempSensor = {
   _id: "",
   name: "",
   temperature: 0,
-  custom_id: "",
   category: "",
+  room: "",
+  house: "",
 };
 
 export const defaultTemperatureSensors: TempSensors = {

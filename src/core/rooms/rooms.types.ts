@@ -9,3 +9,8 @@ export interface Room {
 export interface Rooms {
   [key: string]: Room
 }
+
+export type getRoomsByParamData = {
+  house_id?: String,
+  room_id?: String,
+}

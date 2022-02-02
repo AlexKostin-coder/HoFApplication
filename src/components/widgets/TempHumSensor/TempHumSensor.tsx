@@ -15,7 +15,6 @@ interface TempHumSensorProps {
   temperature: number,
   humidity?: number,
   _id: string,
-  custom_id: string,
 }
 
 const TempHumSensor: FC<TempHumSensorProps> = props => {
@@ -25,7 +24,6 @@ const TempHumSensor: FC<TempHumSensorProps> = props => {
     temperature,
     humidity,
     _id,
-    custom_id,
   } = props;
 
   return (
@@ -43,7 +41,7 @@ const TempHumSensor: FC<TempHumSensorProps> = props => {
               fill={'#008CCC'}
             />
             <Text style={[styles.text, { fontWeight: 'normal', color: 'grey' }]}>
-              {temperature || ""}
+              {temperature || ""}°C
             </Text>
           </View>
           <View style={styles.info_sensor_item}>

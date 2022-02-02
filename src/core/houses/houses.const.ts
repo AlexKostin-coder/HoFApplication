@@ -17,7 +17,6 @@ export const defaultCurrentHouseId: CurrentHouseId = {
 export const defaultHouse: House = {
   _id: '',
   name: '',
-  user: "",
   rooms: [],
   temperature_sensors: [],
 }

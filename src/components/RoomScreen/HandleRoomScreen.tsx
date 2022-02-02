@@ -26,7 +26,7 @@ import {
   createRoom,
   deleteRoom,
   editRoom,
-  getRoomsByHouseId,
+  getRoomsByParam,
   uploadImageRoom,
 } from '../../core/rooms/rooms.actions';
 import {
@@ -105,7 +105,7 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
         }));
       await dispatch(action);
       await dispatch(getHouses());
-      const res = await dispatch(getRoomsByHouseId(currentHouseId));
+      const res = await dispatch(getRoomsByParam({ house_id: currentHouseId }));
 
       if (type === 'add') {
         const rooms = Object.keys(res.payload.rooms);
@@ -143,8 +143,10 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
   const handleDeleteRoom = async () => {
     try {
       await dispatch(deleteRoom(currentHouseId, roomId));
-      await dispatch(getRoomsByHouseId(currentHouseId));
-      await dispatch(getHouses());
+      await Promise.all([
+        dispatch(getHouses()),
+        dispatch(getRoomsByParam({ house_id: currentHouseId })),
+      ]);
       navigation.navigate(MAIN_TAB, {});
     } catch (e) {
       console.log({ e });

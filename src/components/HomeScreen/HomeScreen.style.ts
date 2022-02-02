@@ -94,7 +94,7 @@ export const styles = StyleSheet.create({
     fontWeight: '400',
   },
   catagories_device_list: {
-
+    marginTop: 10,
   },
   catagories_device: {
     backgroundColor: 'white',

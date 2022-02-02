@@ -6,17 +6,18 @@ import {
   UPLOAD_IMAGE_ROOM,
 } from "./rooms.const";
 
+import { getRoomsByParamData } from "./rooms.types";
 import { normalizeDate } from "../tools/normalizeData";
 import { setMessages } from "../ui/ui.actions";
 
-export const getRoomsByHouseId = (houseId: String) => async (
+export const getRoomsByParam = (data: getRoomsByParamData) => async (
   dispatch: Dispatch,
   getState: GetStateType,
   api: API
 ) => {
   try {
 
-    const res = await api('POST', 'getRoomsByHouseId', { houseId });
+    const res = await api('POST', 'getRoomsByParam', data);
 
     if (res.data.message) {
       dispatch(
