@@ -273,7 +273,7 @@ export const deleteTemperetureSensors = (data: addTemperetureSensorsData) => asy
 
     return dispatch({
       type: DELETE_TEMPERATURE_SENSORS_IN_ROOM,
-      payload: {}
+      payload: data
     });
 
   } catch (e: any) {

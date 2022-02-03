@@ -19,16 +19,16 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 export type MainStackParamList = {
   MainTab: {},
   Devices: {
-    categoryId: String,
-    title: String,
-    alias: String,
+    categoryId: string,
+    title: string,
+    alias: string,
   },
   Room: {
-    roomId: String,
+    roomId: string,
     type: 'edit' | 'add',
   },
   HandleRoom: {
-    roomId: String,
+    roomId: string,
     type: 'edit' | 'add',
   },
   Profile: {},

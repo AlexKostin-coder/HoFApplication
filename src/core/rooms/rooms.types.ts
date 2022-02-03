@@ -11,11 +11,11 @@ export interface Rooms {
 }
 
 export type getRoomsByParamData = {
-  house_id?: String,
-  room_id?: String,
+  house_id?: string,
+  room_id?: string,
 }
 
 export type addTemperetureSensorsData = {
-  room_id?: String,
+  room_id?: string,
   devices_id: Array<string>
 }

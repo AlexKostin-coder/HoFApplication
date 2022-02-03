@@ -54,6 +54,7 @@ import Trash from '../../assets/icons/trash.svg';
 import { currentHouseIdSelector } from '../../core/houses/houses.selectors';
 import { getCurrentUrl } from '../../core/tools/getCurrentUrl';
 import { getHouses } from '../../core/houses/houses.actions';
+import { getTemperatureSensorsByParam } from '../../core/devices/devices.actions';
 import { requestCameraPermission } from '../../handlers/PermissionAndroid';
 import { roomsSelector } from '../../core/rooms/rooms.selectors';
 import { styles } from './HandleRoomScreen.style';
@@ -166,7 +167,8 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
       await dispatch(deleteRoom(currentHouseId, roomId));
       await Promise.all([
         dispatch(getHouses()),
-        dispatch(getRoomsByParam({ house_id: currentHouseId })),
+        dispatch(getRoomsByParam({ room_id: roomId })),
+        dispatch(getTemperatureSensorsByParam({ room_id: roomId })),
       ]);
       navigation.navigate(MAIN_TAB, {});
     } catch (e) {
@@ -181,7 +183,10 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
         devices_id: selectedDevices
       };
       await dispatch(addTemperetureSensors(data));
-      await dispatch(getRoomsByParam({ room_id: roomId }));
+      await Promise.all([
+        dispatch(getRoomsByParam({ room_id: roomId })),
+        dispatch(getTemperatureSensorsByParam({ room_id: roomId })),
+      ]);
       setSelectedDevices([]);
       onClose();
     } catch (e) {
@@ -196,7 +201,10 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
         devices_id: selectedDevices
       };
       await dispatch(deleteTemperetureSensors(data));
-      await dispatch(getRoomsByParam({ room_id: roomId }));
+      await Promise.all([
+        dispatch(getRoomsByParam({ room_id: roomId })),
+        dispatch(getTemperatureSensorsByParam({ room_id: roomId })),
+      ]);
       setSelectedDevices([]);
       setTypeAction("add");
     } catch (e) {
@@ -265,10 +273,9 @@ const HandleRoomScreen: FC<HandleRoomScreenProps> = props => {
   const temperatureSensorsDataAll = Object.keys(temperatureSensors).length
     ? Object.keys(temperatureSensors)
       .filter((temperature_sensor_id) => {
-        const hasRoom = temperatureSensors[temperature_sensor_id]?.room
-          ? true
-          : false;
-        return temperature_sensor_id !== "" && temperature_sensors.includes(temperature_sensor_id) && !hasRoom
+        return temperature_sensor_id !== "" &&
+          (!temperatureSensors[temperature_sensor_id].room ||
+            temperatureSensors[temperature_sensor_id].room !== roomId)
       })
       .map((temperature_sensor_id) => ({ ...temperatureSensors[temperature_sensor_id] }))
     : [];

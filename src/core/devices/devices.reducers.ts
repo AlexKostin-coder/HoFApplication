@@ -5,6 +5,7 @@ import {
   defaultTemperatureSensors
 } from "./devices.const";
 
+import { DELETE_TEMPERATURE_SENSORS_IN_ROOM } from "../rooms/rooms.const";
 import { LOG_OUT } from "../auth/auth.const";
 
 export const devices = (state: MainState['devices'] = defaultDevices, action: Action) => {
