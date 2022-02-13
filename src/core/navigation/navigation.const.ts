@@ -9,3 +9,4 @@ export const LINK_DEVICES_SCREEN = 'LinkDevices';
 export const NOTIFICATIONS_SCREEN = 'Notifications';
 export const MAIN_TAB = 'MainTab';
 export const HOUSES_SCREEN = 'Houses';
+export const SEGMENT_CLOCK_SCREEN = 'SegmentClock';

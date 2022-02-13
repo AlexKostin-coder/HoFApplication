@@ -18,7 +18,8 @@ import {
   HANDLE_ROOM_SCREEN,
   HOUSES_SCREEN,
   PROFILE_SCREEN,
-  ROOM_SCREEN
+  ROOM_SCREEN,
+  SEGMENT_CLOCK_SCREEN
 } from '../../core/navigation/navigation.const';
 import {
   NavigationProp,
@@ -52,6 +53,7 @@ import { getTemperatureSensorsByParam } from '../../core/devices/devices.actions
 import { roomsSelector } from '../../core/rooms/rooms.selectors';
 import { styles } from './HomeScreen.style';
 import { temperatureSensorsSelector } from '../../core/devices/devices.selectors';
+import SegmentClock from '../widgets/SegmentClock/SegmentClock';
 
 interface HomeScreenProps {
   navigation: NavigationProp<ParamListBase>
@@ -258,6 +260,9 @@ const HomeScreen: FC<HomeScreenProps> = props => {
       </View>
       <View style={styles.devices}>
         <Text style={styles.devices_title}>Пристрої</Text>
+        <SegmentClock
+          onPress={() => { navigation.navigate(SEGMENT_CLOCK_SCREEN, {}) }}
+        />
         <FlatList
           data={temperatureSensorsData}
           style={styles.catagories_device_list}

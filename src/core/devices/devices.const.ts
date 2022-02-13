@@ -7,6 +7,7 @@ import {
 
 export const GET_TEMPERATURE_SENESORS = 'GET_TEMPERATURE_SENESORS';
 export const GET_DEVICES = "GET_DEVICES";
+export const CHANGE_SETTINGS_SEGMENT_CLOCK = "CHANGE_SETTINGS_SEGMENT_CLOCK";
 
 export const defaultTemperatureSensor: TempSensor = {
   _id: "",

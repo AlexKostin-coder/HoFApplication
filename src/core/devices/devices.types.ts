@@ -38,3 +38,7 @@ export type TempSensor = {
 export type TempSensors = {
   [key: string]: TempSensor
 }
+
+export type SegmentClockData = {
+  
+}
