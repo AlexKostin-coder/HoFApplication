@@ -3,6 +3,7 @@ import {
   CheckIcon,
   ChevronDownIcon,
   Divider,
+  ScrollView,
   useDisclose
 } from 'native-base';
 import {
@@ -260,20 +261,22 @@ const HomeScreen: FC<HomeScreenProps> = props => {
       </View>
       <View style={styles.devices}>
         <Text style={styles.devices_title}>Пристрої</Text>
-        <SegmentClock
-          onPress={() => { navigation.navigate(SEGMENT_CLOCK_SCREEN, {}) }}
-        />
-        <FlatList
-          data={temperatureSensorsData}
-          style={styles.catagories_device_list}
-          keyExtractor={(item, index) => item._id}
-          numColumns={2}
-          renderItem={({ item: temperatureSensor, index }) => (
-            <TempHumSensor
-              {...temperatureSensor}
-            />
-          )}
-        />
+        <ScrollView>
+          <SegmentClock
+            onPress={() => { navigation.navigate(SEGMENT_CLOCK_SCREEN, {}) }}
+          />
+          <FlatList
+            data={temperatureSensorsData}
+            style={styles.catagories_device_list}
+            keyExtractor={(item, index) => item._id}
+            numColumns={2}
+            renderItem={({ item: temperatureSensor, index }) => (
+              <TempHumSensor
+                {...temperatureSensor}
+              />
+            )}
+          />
+        </ScrollView>
       </View>
     </View >
   )

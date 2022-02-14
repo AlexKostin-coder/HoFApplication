@@ -64,7 +64,7 @@ export const changeSettingsSegmentClock = (data: SegmentClockData) => async (
 
     return dispatch({
       type: CHANGE_SETTINGS_SEGMENT_CLOCK,
-      payload: {},
+      payload: res.data,
     });
   } catch (e: any) {
     return dispatch(

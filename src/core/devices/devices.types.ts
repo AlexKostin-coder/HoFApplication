@@ -40,5 +40,5 @@ export type TempSensors = {
 }
 
 export type SegmentClockData = {
-  
+  clockId: String,
 }
