@@ -20,6 +20,7 @@ import { getUser } from '../../core/users/users.actions';
 import md5 from 'md5';
 import { styles } from './LoginScreen.style';
 import { useDispatch } from 'react-redux';
+import { GET_AUTH } from '../../core/auth/auth.const';
 
 type Props = NativeStackScreenProps<MainStackParamList, 'Login'>;
 
@@ -49,12 +50,14 @@ const LoginScreen: FC<LoginScreenProps> = (props) => {
     if (email.length && password.length) {
       setIsLoading(true);
       try {
-        await dispatch(getAuth(email, md5(password)));
-        await dispatch(getUser());
-        setEmail("");
-        setPassword("");
-        setShowKeyboard(false);
-        setShowError(false);
+        const res = await dispatch(getAuth(email, md5(password)));
+        if (res.type === GET_AUTH) {
+          await dispatch(getUser());
+          setEmail("");
+          setPassword("");
+          setShowKeyboard(false);
+          setShowError(false);
+        }
       } catch (e) {
         console.log({ e });
       }

@@ -35,7 +35,9 @@ export type MainStackParamList = {
   },
   Profile: {},
   Houses: {},
-  SegmentClock: {},
+  SegmentClock: {
+    segment_clock_id: string
+  },
 };
 
 const Stack = createNativeStackNavigator<MainStackParamList>();

@@ -32,7 +32,8 @@ export type TempSensor = {
   temperature: number,
   category: string,
   house: string,
-  room: string
+  room: string,
+  type: string
 }
 
 export type TempSensors = {
@@ -40,5 +41,47 @@ export type TempSensors = {
 }
 
 export type SegmentClockData = {
-  clockId: String,
+  settings_clock_id: String,
+  auto_bright?: boolean,
+  bright?: number
+}
+
+export type GetSegmentClocks = {
+  segment_clocks_id?: string[],
+  house_id?: string
+}
+
+export type GetSegmentClocksSettings = {
+  segment_clock_id: string,
+}
+
+export type SegmentClock = {
+  _id: string,
+  temperature: number,
+  humidity: number,
+  pressure: number,
+  altitude: number,
+  house: string,
+  room: string,
+  type: string
+  name: string,
+  settings: string,
+}
+
+export type SegmentClocks = {
+  [key: string]: SegmentClock
+}
+
+export type SettingSegmentClock = {
+  last_colors: Array<{ h: number, s: number, v: number }>,
+  auto_bright: boolean,
+  bright: number,
+  min_bright: number,
+  max_bright: number,
+  _id: string,
+  segment_clock: string,
+}
+
+export type SettingsSegmentClocks = {
+  [key: string]: SettingSegmentClock
 }

@@ -50,11 +50,18 @@ import { authUserSelector } from '../../core/users/users.selectors';
 import { declOfNum } from '../../core/tools/declOfNum';
 import { getCurrentUrl } from '../../core/tools/getCurrentUrl';
 import { getRoomsByParam } from '../../core/rooms/rooms.actions';
-import { getTemperatureSensorsByParam } from '../../core/devices/devices.actions';
+import {
+  getTemperatureSensorsByParam,
+  getSegmentClocks
+} from '../../core/devices/devices.actions';
 import { roomsSelector } from '../../core/rooms/rooms.selectors';
 import { styles } from './HomeScreen.style';
-import { temperatureSensorsSelector } from '../../core/devices/devices.selectors';
+import {
+  temperatureSensorsSelector,
+  segmentClocksSelector,
+} from '../../core/devices/devices.selectors';
 import SegmentClock from '../widgets/SegmentClock/SegmentClock';
+import { getUser } from '../../core/users/users.actions';
 
 interface HomeScreenProps {
   navigation: NavigationProp<ParamListBase>
@@ -73,18 +80,25 @@ const HomeScreen: FC<HomeScreenProps> = props => {
   const houses = useSelector(housesSelector);
   const currentHouseId = useSelector(currentHouseIdSelector);
   const temperatureSensors = useSelector(temperatureSensorsSelector);
+  const segmentClocks = useSelector(segmentClocksSelector);
+
+  const {
+    temperature_sensors = [],
+    segment_clocks = [],
+    rooms: roomsCurrentHouse = [],
+  } = houses[currentHouseId] || {};
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const getData = async () => {
     setIsLoading(true);
     try {
+      await dispatch(getUser());
       await dispatch(getHouses());
       if (currentHouseId) {
-        await Promise.all([
-          dispatch(getRoomsByParam({ house_id: currentHouseId })),
-          dispatch(getTemperatureSensorsByParam({ house_id: currentHouseId })),
-        ]);
+        dispatch(getTemperatureSensorsByParam({ house_id: currentHouseId }));
+        dispatch(getSegmentClocks({ house_id: currentHouseId }));
+        dispatch(getRoomsByParam({ house_id: currentHouseId }));
       }
     } catch (e) {
       console.log({ e });
@@ -139,15 +153,6 @@ const HomeScreen: FC<HomeScreenProps> = props => {
     ? Object.keys(houses)
       .filter((house_id) => house_id !== "")
       .map((house_id) => ({ ...houses[house_id] }))
-    : [];
-
-  const temperatureSensorsData = Object.keys(temperatureSensors).length
-    ? Object.keys(temperatureSensors)
-      .filter((temperature_sensor_id) => {
-        const { house } = temperatureSensors[temperature_sensor_id];
-        return temperature_sensor_id !== "" && house === currentHouseId
-      })
-      .map((temperature_sensor_id) => ({ ...temperatureSensors[temperature_sensor_id] }))
     : [];
 
   return (
@@ -208,16 +213,15 @@ const HomeScreen: FC<HomeScreenProps> = props => {
               name,
               _id,
               image_id,
-              temperature_sensors,
+              temperature_sensors = [],
+              segment_clocks = [],
             } = room;
 
             const addRoom = _id === ""
               ? true
               : false;
 
-            const count_devices = temperature_sensors && temperature_sensors.length
-              ? temperature_sensors.length
-              : 0;
+            const count_devices = temperature_sensors.length + segment_clocks.length;
 
             return (
               <TouchableOpacity
@@ -261,21 +265,24 @@ const HomeScreen: FC<HomeScreenProps> = props => {
       </View>
       <View style={styles.devices}>
         <Text style={styles.devices_title}>Пристрої</Text>
-        <ScrollView>
-          <SegmentClock
-            onPress={() => { navigation.navigate(SEGMENT_CLOCK_SCREEN, {}) }}
-          />
-          <FlatList
-            data={temperatureSensorsData}
-            style={styles.catagories_device_list}
-            keyExtractor={(item, index) => item._id}
-            numColumns={2}
-            renderItem={({ item: temperatureSensor, index }) => (
-              <TempHumSensor
-                {...temperatureSensor}
+        <ScrollView contentContainerStyle={{ paddingTop: 12 }}>
+          {
+            segment_clocks.map((segment_clock_id) => (
+              <SegmentClock
+                key={segment_clock_id}
+                {...segmentClocks[segment_clock_id]}
+                onPress={() => navigation.navigate(SEGMENT_CLOCK_SCREEN, { segment_clock_id })}
               />
-            )}
-          />
+            ))
+          }
+          {
+            temperature_sensors.map((temperature_sensor_id) => (
+              <TempHumSensor
+                key={temperature_sensor_id}
+                {...temperatureSensors[temperature_sensor_id]}
+              />
+            ))
+          }
         </ScrollView>
       </View>
     </View >

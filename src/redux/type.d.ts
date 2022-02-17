@@ -1,7 +1,9 @@
 import { Rooms } from './../core/rooms/rooms.types';
 import {
 	Devices,
-	TempSensors
+	TempSensors,
+	SegmentClocks,
+	SettingsSegmentClocks
 } from './../core/devices/devices.types';
 import { UIState } from './../core/ui/ui.types';
 import { Api } from './../core/api/api.types';
@@ -25,7 +27,9 @@ declare global {
 		houses: Houses
 		currentHouseId: CurrentHouseId,
 		categoryDevices: CategorysDevice,
-		temperature_sensors: TempSensors
+		temperature_sensors: TempSensors,
+		segment_clocks: SegmentClocks,
+		settings_segment_clock: SettingsSegmentClocks
 	};
 
 	type MainStorge = Store<MainState, AnyAction>;

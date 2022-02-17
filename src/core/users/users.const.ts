@@ -10,7 +10,9 @@ export const defaultUser: User = {
   _id: '',
   name: '',
   email: '',
-  photo: ''
+  photo: '',
+  temperature_sensors: [],
+  segment_clocks: []
 };
 
 export const defaultUsers: Users = {

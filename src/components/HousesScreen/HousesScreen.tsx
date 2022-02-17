@@ -167,18 +167,14 @@ const HousesScreen: FC = props => {
         renderItem={({ item, index }) => {
           const {
             _id,
-            name,
-            rooms,
-            temperature_sensors
+            name = "",
+            rooms = [],
+            temperature_sensors = [],
+            segment_clocks = []
           } = item;
 
-          const count_rooms = rooms && rooms.length
-            ? rooms.length
-            : 0;
-
-          const count_devices = temperature_sensors && temperature_sensors.length
-            ? temperature_sensors.length
-            : 0;
+          const count_rooms = rooms.length
+          const count_devices = temperature_sensors.length + segment_clocks.length
 
           return (
             <>

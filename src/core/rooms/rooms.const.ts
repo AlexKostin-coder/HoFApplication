@@ -17,6 +17,7 @@ export const defaultRoom: Room = {
   house: '',
   image_id: '',
   temperature_sensors: [],
+  segment_clocks: [],
 };
 export const defaultRooms: Rooms = {
   [defaultRoom._id]: defaultRoom

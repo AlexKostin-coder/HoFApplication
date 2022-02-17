@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
     padding: 10,
   },
   triange_picker: {
-    flex: 1
+    height: Dimensions.get('window').height / 2,
   },
   wrapper_check_box: {
     flexDirection: 'row',
@@ -19,5 +19,17 @@ export const styles = StyleSheet.create({
   text: {
     color: 'grey',
     fontSize: 16
+  },
+  colors_block: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 10,
+  },
+  color_block: {
+    width: 50,
+    height: 50,
+    marginHorizontal: 6,
+    borderRadius: 8
   }
 });

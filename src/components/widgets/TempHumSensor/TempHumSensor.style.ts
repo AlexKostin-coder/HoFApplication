@@ -9,12 +9,13 @@ export const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     height: (width / 3) - 16,
-    width: (width / 2) - 16,
+    width: '50%',
     padding: 10,
     borderRadius: 16,
     marginRight: 12,
     marginBottom: 12,
     flexDirection: 'row',
+
   },
   details: {
     flex: 3,
