@@ -3,6 +3,7 @@ export type Headers = {
 	'Content-Type': string,
 	'Accept-Language'?: string,
 	'Authorization'?: string,
+	'Access-Control-Allow-Origin'?: string,
 };
 
 export type Methods = 'POST' | 'GET' | 'DELETE' | 'PUT' | 'PATCH';
